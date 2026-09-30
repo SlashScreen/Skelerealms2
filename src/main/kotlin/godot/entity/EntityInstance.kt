@@ -8,7 +8,7 @@ import godot.core.*
 class EntityInstance : Resource() {
     // TODO: Will probably have issues with editor vs constructor instantiating
     @Export
-    var id: StringName = StringName((1..RANDOM_NAME_LENGTH).map { allowedChars.random() }.joinToString(""))
+    var id: StringName = (1..RANDOM_NAME_LENGTH).map { allowedChars.random() }.joinToString("").asCachedStringName()
     @Export
     var components: VariantArray<EntityComponentInstance> = VariantArray()
 

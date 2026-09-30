@@ -4,6 +4,7 @@ import godot.annotation.Register
 import godot.annotation.Script
 import godot.annotation.Visible
 import godot.core.StringName
+import godot.core.asCachedStringName
 import godot.entity.EntityComponent
 
 @Script
@@ -11,7 +12,7 @@ class ItemComponent : EntityComponent() {
     public var inventory: StringName? = null
     @Visible
     var containedInventory: StringName
-        get() = inventory ?: StringName("")
+        get() = inventory ?: "".asCachedStringName()
         set(value) {
             inventory = if (inventory.toString().isEmpty()) null else value
         }
