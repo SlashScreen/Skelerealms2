@@ -1,0 +1,4 @@
+trait_name TestTrait
+extends Resource
+
+@abstract func foo() -> bool

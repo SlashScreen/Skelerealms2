@@ -1,0 +1,9 @@
+class_name TestResource
+extends Resource
+uses TestTrait
+
+@export var other_traits: Array[TestTrait]
+
+
+func foo() -> bool:
+	return true
