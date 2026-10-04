@@ -3,7 +3,6 @@ package godot.goap
 import godot.api.Resource
 import godot.core.Dictionary
 import godot.core.StringName
-import javax.swing.Action
 
 class GoapPlanner : Resource() {
     val actions: Array<GoapAction> = arrayOf()
@@ -31,7 +30,8 @@ class GoapPlanner : Resource() {
         } else null
     }
 
-    fun getCheapestPlan(plans: Array<Pair<Array<GoapAction>, Int>>): Array<GoapAction>? = plans.minByOrNull { plan -> plan.second }?.first
+    fun getCheapestPlan(plans: Array<Pair<Array<GoapAction>, Int>>): Array<GoapAction>? =
+        plans.minByOrNull { plan -> plan.second }?.first
 
     fun buildPlans(step: PlanNode, blackboard: Dictionary<StringName, Any?>): Boolean {
         // Drain satisfied values
@@ -78,13 +78,15 @@ class GoapPlanner : Resource() {
         val plans = mutableListOf<Pair<Array<GoapAction>, Int>>()
 
         if (plan.children.isEmpty()) {
-            return arrayOf(Pair(plan.action?.let { arrayOf(it) } ?: arrayOf(), plan.action?.getCost(blackboard) ?: 0)) // TODO: Userdata?
+            return arrayOf(Pair(plan.action?.let { arrayOf(it) } ?: arrayOf(),
+                plan.action?.getCost(blackboard) ?: 0)) // TODO: Userdata?
         }
 
         plan.children.forEach { child ->
             for ((first, second) in treeIntoArray(child, blackboard)) {
-                plans.add(Pair (
-                    plan.action?.let { first + it } ?: first,
+                plans.add(
+                    Pair(
+                        plan.action?.let { first + it } ?: first,
                     second + (plan.action?.getCost(blackboard) ?: 0)
                 ))
             }

@@ -1,5 +1,6 @@
 package godot.entity
 
+import godot.annotation.Emit
 import godot.annotation.Export
 import godot.annotation.Register
 import godot.annotation.Script
@@ -9,8 +10,18 @@ import godot.global.GD
 
 @Script
 class Entity : Node() {
+    @Emit
+    val roomChanged by signal1<StringName>()
+
     public var transform: Transform3D = Transform3D.IDENTITY
     val components: HashMap<StringName, EntityComponent> = hashMapOf()
+
+    @Export
+    var room: StringName = "".asCachedStringName()
+        set(value) {
+            field = value
+            roomChanged.emit(value)
+        }
 
     @Export
     public var position: Vector3
@@ -86,10 +97,36 @@ class Entity : Node() {
     }
 
     @Register
-    public fun addComponentFromInstance(instance: EntityComponentInstance, userdata: Dictionary<StringName, Any?> = Dictionary()) {
+    public fun addComponentFromInstance(
+        instance: EntityComponentInstance,
+        userdata: Dictionary<StringName, Any?> = Dictionary()
+    ) {
         val n = instance.constructComponent(userdata)
         val cName = (n.getScript() as godot.api.Script).getGlobalName()
         n.name = cName
         addComponentByNode(n) // gets name twice, but...
+    }
+
+    @Register
+    public fun gatherSaveData(): Dictionary<StringName, Dictionary<StringName, Any?>> =
+        Dictionary<StringName, Dictionary<StringName, Any?>>().also {
+            components.forEach { (_, component) ->
+                component.getSaveData()?.let { data -> it[component.saveDataKey()] = data }
+            }
+            it["entity".asCachedStringName()] =
+                dictionaryOf("tx".asCachedStringName() to transform, "room".asCachedStringName() to room)
+        }
+
+    @Register
+    public fun applySaveData(data: Dictionary<StringName, Dictionary<StringName, Any?>>) {
+        // Load entity stuff
+        data["entity".asCachedStringName()].let { packet ->
+            packet["tx".asCachedStringName()]?.let { tx -> tx as? Transform3D }?.let { tx3D -> transform = tx3D }
+            packet["room".asCachedStringName()]?.let { room -> room as? StringName }?.let { room -> this.room = room }
+        }
+
+        // Try to apply to each component
+        // TODO: Optimize?...
+        data.forEach { (id, packet) -> components.values.first { ec -> ec.handlesSaveData(id) }.loadFromData(packet) }
     }
 }
