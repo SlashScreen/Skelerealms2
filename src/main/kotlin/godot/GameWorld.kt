@@ -35,6 +35,8 @@ class GameWorld : Node() {
             return
         }
         entities[n.name] = n
+        addChild(n)
+        GD.print("Entity ${n.name} added")
     }
 
     @Register
@@ -82,6 +84,7 @@ class GameWorld : Node() {
     }
 
     override fun _ready() {
+        registry?.initialize()
         loadAllEntities()
     }
 }

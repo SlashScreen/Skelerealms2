@@ -9,6 +9,7 @@ import godot.api.ResourceUID
 import godot.core.*
 import godot.entity.EntityInstance
 import godot.extension.loadAs
+import godot.global.GD
 
 @Script
 class EntityRegistry : Resource() {
@@ -54,6 +55,7 @@ class EntityRegistry : Resource() {
     public fun loadAllBlocking(): Dictionary<StringName, EntityInstance> {
         val dictionary = Dictionary<StringName, EntityInstance>()
         ids.forEach { (name, uid) ->
+            GD.print("Loading $name for $uid")
             cache[name]?.let { entityInstance -> dictionary[name] = entityInstance }
                 ?: ResourceLoader.loadAs<EntityInstance>(ResourceUID.getIdPath(uid), "EntityInstance")
                     ?.also { entityInstance -> cache[name] = entityInstance }

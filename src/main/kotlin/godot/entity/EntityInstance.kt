@@ -2,9 +2,12 @@ package godot.entity
 
 import godot.annotation.Export
 import godot.annotation.Register
+import godot.annotation.Script
 import godot.api.Resource
 import godot.core.*
+import godot.global.GD
 
+@Script
 class EntityInstance : Resource() {
     // TODO: Will probably have issues with editor vs constructor instantiating
     @Export
@@ -40,6 +43,7 @@ class EntityInstance : Resource() {
         val n = Entity()
         n.name = id
         components.forEach { c -> n.addComponentFromInstance(c, userdata) }
+        GD.print("Entity $id constructed!")
         return n
     }
 

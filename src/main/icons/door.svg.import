@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b16t1f2625dr1"
-path="res://.godot/imported/door.svg-789dbaa33081a279d2f278b40bb83316.ctex"
+path="res://.godot/imported/door.svg-6d50b82f494f07a5c7964118691376f3.ctex"
 metadata={
 "has_editor_variant": true,
 "vram_texture": false
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://addons/at-icons/node/door.svg"
-dest_files=["res://.godot/imported/door.svg-789dbaa33081a279d2f278b40bb83316.ctex"]
+source_file="res://src/main/icons/door.svg"
+dest_files=["res://.godot/imported/door.svg-6d50b82f494f07a5c7964118691376f3.ctex"]
 
 [params]
 

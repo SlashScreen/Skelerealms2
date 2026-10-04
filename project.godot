@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="sk-kt"
+run/main_scene="uid://b6whiqpe4cjto"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -22,6 +23,12 @@ window/stretch/aspect="expand"
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/godot_sandbox/plugin.cfg", "res://addons/gut/plugin.cfg")
+
+[file_customization]
+
+folder_colors={
+"res://entities/": "pink"
+}
 
 [physics]
 
