@@ -1,6 +1,7 @@
 package godot.entity
 
 import godot.annotation.Export
+import godot.annotation.HintString
 import godot.annotation.Register
 import godot.annotation.Script
 import godot.api.Resource
@@ -12,8 +13,9 @@ class EntityInstance : Resource() {
     // TODO: Will probably have issues with editor vs constructor instantiating
     @Export
     var id: StringName = (1..RANDOM_NAME_LENGTH).map { allowedChars.random() }.joinToString("").asCachedStringName()
-    @Export
-    var components: VariantArray<EntityComponentInstance> = VariantArray()
+
+    @HintString("24/17:EntityComponentInstance,EntityComponentInstanceGD")
+    var components: VariantArray<Resource> = VariantArray()
 
     public var transform: Transform3D = Transform3D.IDENTITY
 
@@ -42,7 +44,12 @@ class EntityInstance : Resource() {
     public fun constructEntity(userdata: Dictionary<StringName, Any?> = Dictionary()): Entity {
         val n = Entity()
         n.name = id
-        components.forEach { c -> n.addComponentFromInstance(c, userdata) }
+        components.map { r ->
+            when (r) {
+                is EntityComponentInstance -> r
+                else -> EntityComponentInstanceGd().apply { resource = r } // TODO: Validate?
+            }
+        }.forEach { c -> n.addComponentFromInstance(c, userdata) }
         GD.print("Entity $id constructed!")
         return n
     }

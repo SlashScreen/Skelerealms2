@@ -35,6 +35,7 @@ class GameWorld : Node() {
             return
         }
         entities[n.name] = n
+        n.gameWorld = this
         addChild(n)
         GD.print("Entity ${n.name} added")
     }
@@ -61,15 +62,10 @@ class GameWorld : Node() {
     }
 
     @Register
-    public fun gatherEntitySaveBuffer(): PackedByteArray =
-        Marshalls.base64ToRaw(Marshalls.variantToBase64(gatherSaveData())).compress()
+    public fun createSaveGame(): SaveGame = SaveGame().apply { data = gatherSaveData() }
 
     @Register
-    public fun applyEntitySaveBuffer(buffer: PackedByteArray) {
-        Marshalls.base64ToVariant(Marshalls.rawToBase64(buffer.decompress(buffer.size * 3)))
-            ?.let { it as? Dictionary<StringName, Dictionary<StringName, Dictionary<StringName, Any?>>> } // Why dont it do that
-            ?.let { buf -> applySaveData(buf) }
-    }
+    public fun applySaveGame(saveData: SaveGame) = applySaveData(saveData.data ?: dictionaryOf())
 
     @Register
     public fun loadAllEntities(userdata: Dictionary<StringName, Any?> = Dictionary()) {

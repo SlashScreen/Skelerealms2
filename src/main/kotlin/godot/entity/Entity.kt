@@ -1,26 +1,57 @@
 package godot.entity
 
-import godot.annotation.Emit
-import godot.annotation.Export
-import godot.annotation.Register
-import godot.annotation.Script
+import godot.GameWorld
+import godot.annotation.*
 import godot.api.Node
 import godot.core.*
 import godot.global.GD
 
 @Script
 class Entity : Node() {
+    enum class SimState { FULL, PARTIAL, NONE }
+
     @Emit
     val roomChanged by signal1<StringName>()
 
+    @Emit
+    val simStateChanged by signal1<StringName>()
+
+    @Visible
     public var transform: Transform3D = Transform3D.IDENTITY
+
+    @Visible
+    public var gameWorld: GameWorld? = null
+
     val components: HashMap<StringName, EntityComponent> = hashMapOf()
 
     @Export
-    var room: StringName = "".asCachedStringName()
+    public var simState: SimState = SimState.FULL
         set(value) {
+            if (field == value) return
+
+            field = value
+            simStateChanged.emit(when(value) {
+                SimState.FULL -> "full".asCachedStringName()
+                SimState.PARTIAL -> "partial".asCachedStringName()
+                else -> "none".asCachedStringName()
+            })
+        }
+
+    @Export
+    public var room: StringName = "".asCachedStringName()
+        set(value) {
+            if (field == value) return
+
             field = value
             roomChanged.emit(value)
+
+            gameWorld?.let {
+                simState = if (it.currentRoom == value)
+                    SimState.FULL
+                else
+                    SimState.PARTIAL
+
+            }
         }
 
     @Export
@@ -128,5 +159,11 @@ class Entity : Node() {
         // Try to apply to each component
         // TODO: Optimize?...
         data.forEach { (id, packet) -> components.values.first { ec -> ec.handlesSaveData(id) }.loadFromData(packet) }
+    }
+
+    @Register
+    public fun teleport(location: Vector3, room: StringName) {
+        this.room = room
+        position = location
     }
 }

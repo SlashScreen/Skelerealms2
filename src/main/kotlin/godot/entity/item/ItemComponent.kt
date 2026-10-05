@@ -34,9 +34,6 @@ class ItemComponent : EntityComponent() {
     }
 
     @Register
-    override fun handlesSaveData(key: StringName): Boolean = key == "itemComponent".asCachedStringName()
-
-    @Register
     override fun saveDataKey(): StringName = "itemComponent".asCachedStringName()
 
     @Register
