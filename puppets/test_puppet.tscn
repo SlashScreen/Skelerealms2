@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://doqtquety2ey4"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_6mfa5"]
+
+[node name="TestPuppet" type="Node3D" unique_id=573290848]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=305533452]
+mesh = SubResource("SphereMesh_6mfa5")

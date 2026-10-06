@@ -1,5 +1,6 @@
 package godot.entity.puppet
 
+import godot.annotation.Register
 import godot.annotation.Script
 import godot.api.Node3D
 import godot.api.PackedScene
@@ -8,8 +9,9 @@ import godot.core.StringName
 import godot.core.Transform3D
 import godot.core.asCachedStringName
 import godot.entity.Entity
+import godot.entity.Entity.SimState
 import godot.entity.EntityComponent
-import godot.extension.connectLambda
+import godot.extension.connectMethod
 import godot.global.GD
 
 @Script
@@ -18,15 +20,29 @@ class PuppetComponent : EntityComponent() {
     var puppet: Node3D? = null
 
     override fun _ready() {
-        entity?.simStateChanged?.connectLambda { simState ->
-            when (simState) {
-                "full".asCachedStringName() -> spawnPuppet()
-                else -> destroyPuppet()
-            }
+        entity?.simStateChanged?.connectMethod(this, PuppetComponent::trySpawnPuppet)
+        entity?.let { trySpawnPuppetFromState(it.simState) }
+    }
+
+    fun trySpawnPuppetFromState(state: Entity.SimState) = trySpawnPuppet(
+        when (state) {
+            SimState.FULL -> "full".asCachedStringName()
+            SimState.PARTIAL -> "partial".asCachedStringName()
+            else -> "none".asCachedStringName()
+        }
+    )
+
+    @Register
+    fun trySpawnPuppet(state: StringName) {
+        // TODO: Don't do this multiple times?
+        when (state) {
+            "full".asCachedStringName() -> spawnPuppet()
+            else -> destroyPuppet()
         }
     }
 
     fun spawnPuppet() {
+        GD.print("spawn puppet")
         if (puppet != null) destroyPuppet()
         puppetScene?.let { scene ->
             val ps = scene.instantiate() as Node3D
@@ -37,6 +53,7 @@ class PuppetComponent : EntityComponent() {
     }
 
     fun destroyPuppet() {
+        GD.print("destroyPuppet")
         puppet?.queueFree()
         puppet = null
     }

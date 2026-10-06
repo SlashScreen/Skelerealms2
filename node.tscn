@@ -1,13 +1,24 @@
 [gd_scene format=3 uid="uid://b6whiqpe4cjto"]
 
 [ext_resource type="Script" uid="uid://bvxlobgm5e5ix" path="res://src/main/kotlin/godot/GameWorld.kt" id="2_j2q8x"]
-[ext_resource type="Script" uid="uid://bp3qq0kyn4j8g" path="res://test_hintstr.gd" id="3_112p8"]
 [ext_resource type="Script" uid="uid://bkmw1bbrw1eid" path="res://src/main/kotlin/godot/EntityRegistry.kt" id="3_e2u21"]
 
 [sub_resource type="Resource" id="Resource_mmcvn"]
 script = ExtResource("3_e2u21")
 res_path = "res://entities/"
 metadata/_custom_type_script = "uid://bkmw1bbrw1eid"
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_j2q8x"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_112p8"]
+sky_material = SubResource("ProceduralSkyMaterial_j2q8x")
+
+[sub_resource type="Environment" id="Environment_e2u21"]
+background_mode = 2
+sky = SubResource("Sky_112p8")
+glow_enabled = true
 
 [node name="Node" type="Node" unique_id=1566812103]
 
@@ -16,6 +27,14 @@ script = ExtResource("2_j2q8x")
 registry = SubResource("Resource_mmcvn")
 metadata/_custom_type_script = "uid://bvxlobgm5e5ix"
 
-[node name="Node" type="Node" parent="." unique_id=744047015]
-script = ExtResource("3_112p8")
-blah = [null]
+[node name="TestWorld" type="Node3D" parent="." unique_id=285505789]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="TestWorld" unique_id=812296948]
+environment = SubResource("Environment_e2u21")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="TestWorld" unique_id=989333340]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="TestWorld" unique_id=1118629499]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
