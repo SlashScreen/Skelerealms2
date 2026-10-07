@@ -75,6 +75,8 @@ class Entity : Node() {
             transform.basis = Basis(value)
         }
 
+    // TODO: Don't be full by default
+
     public inline fun <reified T> getComponent(): EntityComponent? where T : EntityComponent {
         val n = StringName(T::class.simpleName ?: "")
         return components[n]
