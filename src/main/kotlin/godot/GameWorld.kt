@@ -7,6 +7,7 @@ import godot.core.*
 import godot.entity.Entity
 import godot.entity.EntityInstance
 import godot.global.GD
+import godot.navigation.Navigator
 
 @Script
 class GameWorld : Node() {
@@ -14,6 +15,7 @@ class GameWorld : Node() {
     var registry: EntityRegistry? = null
     var room: StringName = "".asCachedStringName()
     val entities: HashMap<StringName, Entity> = HashMap()
+    val navigator = Navigator()
 
     @Visible
     var currentRoom: StringName

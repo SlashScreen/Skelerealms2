@@ -13,3 +13,7 @@ godot {
 
     isGodotCoroutinesEnabled.set(true)
 }
+
+dependencies {
+    implementation("org.jgrapht:jgrapht-core:1.5.3")
+}

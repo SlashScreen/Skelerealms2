@@ -1,0 +1,11 @@
+- [ ] Room change
+- [ ] Range to camera simulation
+- [ ] Hook up GOAP
+- [ ] Navigation
+  - [ ] Portals
+  - [ ] Precompile?
+  - [ ] Navmesh?
+  - [ ] Agent
+  - [ ] A*
+  - [ ] Room-based cache
+  - [ ] Door locking

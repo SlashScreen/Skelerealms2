@@ -4,9 +4,12 @@ import godot.api.AStar3D
 import godot.core.StringName
 import godot.core.Vector3
 import godot.global.GD
+import org.jgrapht.Graph
+import org.jgrapht.graph.DefaultEdge
+import org.jgrapht.graph.DefaultUndirectedWeightedGraph
 
-// TDOD: Make singleton
 class Navigator {
+    val roomGraph: Graph<StringName, DefaultEdge> = DefaultUndirectedWeightedGraph(DefaultEdge::class.java)
     val navMaps = hashMapOf<StringName, AStar3D>()
     val cache = hashMapOf<Pair<StringName, StringName>, List<StringName>>()
     val roomConnections =
