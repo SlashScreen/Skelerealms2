@@ -16,12 +16,27 @@ import godot.global.GD
 
 @Script
 class PuppetComponent : EntityComponent() {
+    enum class ControlMode {
+        EntityControl, // Puppet position is set to entity position
+        PuppetControl  // Entity position is set to puppet position
+    }
+
     var puppetScene: PackedScene? = null
     var puppet: Node3D? = null
+    var controlMode: ControlMode = ControlMode.EntityControl
 
     override fun _ready() {
         entity?.simStateChanged?.connectMethod(this, PuppetComponent::trySpawnPuppet)
         entity?.let { trySpawnPuppetFromState(it.simState) }
+    }
+
+    override fun _physicsProcess(delta: Double) {
+        if (puppet == null) return
+
+        when (controlMode) {
+            ControlMode.EntityControl -> entity?.let { e -> puppet?.globalTransform = e.transform }
+            ControlMode.PuppetControl -> puppet?.let { p -> entity?.transform = p.globalTransform }
+        }
     }
 
     fun trySpawnPuppetFromState(state: Entity.SimState) = trySpawnPuppet(

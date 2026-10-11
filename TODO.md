@@ -1,4 +1,5 @@
 - [ ] Room change
+- [x] Basic first person controller
 - [ ] Range to camera simulation
 - [ ] Hook up GOAP
 - [ ] Navigation
@@ -9,3 +10,8 @@
   - [ ] A*
   - [ ] Room-based cache
   - [ ] Door locking
+- [ ] Island
+  - [X] Block out
+  - [ ] Town
+  - [ ] Dungeon
+  - [ ] Encounter
