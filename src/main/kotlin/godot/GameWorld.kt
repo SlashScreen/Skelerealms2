@@ -1,7 +1,6 @@
 package godot
 
 import godot.annotation.*
-import godot.api.Marshalls
 import godot.api.Node
 import godot.core.*
 import godot.entity.Entity
@@ -12,6 +11,9 @@ import godot.navigation.Navigator
 @Script
 class GameWorld : Node() {
     @Export
+    var settings: SKSettings? = null
+
+    @Export
     var registry: EntityRegistry? = null
     var room: StringName = "".asCachedStringName()
     val entities: HashMap<StringName, Entity> = HashMap()
@@ -21,12 +23,26 @@ class GameWorld : Node() {
     var currentRoom: StringName
         get() = room
         set(value) {
+            GD.print("Changing Gameworld room to: $value")
             room = value
-            roomChanged.emit(room)
+            roomChanged.emit(value)
         }
 
     @Emit
     val roomChanged by signal1<StringName>()
+
+    override fun _ready() {
+        registry?.initialize()
+        loadAllEntities()
+
+        lambdaCallable0 {
+            settings?.let { s ->
+                GD.print("Applying settings")
+                currentRoom = s.startingRoom
+                // TODO: Move player
+            }
+        }.callDeferred()
+    }
 
     @Register
     public fun addEntityFromInstance(instance: EntityInstance, userdata: Dictionary<StringName, Any?> = Dictionary()) {
@@ -79,10 +95,5 @@ class GameWorld : Node() {
             return
         }
         instances.values().forEach { instance -> addEntityFromInstance(instance, userdata) }
-    }
-
-    override fun _ready() {
-        registry?.initialize()
-        loadAllEntities()
     }
 }

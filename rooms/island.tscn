@@ -158,7 +158,6 @@ shadow_enabled = true
 data_directory = "res://terrains/island/"
 material = SubResource("Terrain3DMaterial_iwfky")
 assets = SubResource("Terrain3DAssets_b6g2s")
-collision_mode = 2
 top_level = true
 metadata/_edit_lock_ = true
 
@@ -168,7 +167,7 @@ mesh = SubResource("PlaneMesh_6mfa5")
 surface_material_override/0 = SubResource("StandardMaterial3D_r4683")
 
 [node name="PlayerCharacter" parent="." unique_id=1631114635 instance=ExtResource("4_e2cxf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -85.195404, 5.8948536, 70.060814)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -85.195404, 5.6633453, 70.060814)
 
 [node name="Town" type="Node3D" parent="." unique_id=1396701851]
 

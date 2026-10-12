@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="SKSettings" format=3 uid="uid://cvjsmu8okp63r"]
+
+[ext_resource type="Script" uid="uid://s3jijswaq4ts" path="res://src/main/kotlin/godot/SKSettings.kt" id="1_83k03"]
+
+[resource]
+script = ExtResource("1_83k03")
+starting_room = &"island"
+starting_position = Vector3(-85.195404, 5.6633453, 70.060814)
+metadata/_custom_type_script = "uid://s3jijswaq4ts"
