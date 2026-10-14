@@ -8,7 +8,6 @@ import godot.core.Dictionary
 import godot.core.StringName
 import godot.core.Transform3D
 import godot.core.asCachedStringName
-import godot.entity.Entity
 import godot.entity.Entity.SimState
 import godot.entity.EntityComponent
 import godot.extension.connectMethod
@@ -27,7 +26,7 @@ class PuppetComponent : EntityComponent() {
 
     override fun _ready() {
         entity?.simStateChanged?.connectMethod(this, PuppetComponent::trySpawnPuppet)
-        entity?.let { trySpawnPuppetFromState(it.simState) }
+        entity?.let { trySpawnPuppet(it.simState) }
     }
 
     override fun _physicsProcess(delta: Double) {
@@ -39,19 +38,11 @@ class PuppetComponent : EntityComponent() {
         }
     }
 
-    fun trySpawnPuppetFromState(state: Entity.SimState) = trySpawnPuppet(
-        when (state) {
-            SimState.FULL -> "full".asCachedStringName()
-            SimState.PARTIAL -> "partial".asCachedStringName()
-            else -> "none".asCachedStringName()
-        }
-    )
-
     @Register
-    fun trySpawnPuppet(state: StringName) {
+    fun trySpawnPuppet(state: SimState) {
         // TODO: Don't do this multiple times?
         when (state) {
-            "full".asCachedStringName() -> spawnPuppet()
+            SimState.FULL -> spawnPuppet()
             else -> destroyPuppet()
         }
     }

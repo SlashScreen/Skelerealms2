@@ -16,7 +16,7 @@ class GameWorld : Node() {
     @Export
     var registry: EntityRegistry? = null
     var room: StringName = "".asCachedStringName()
-    val entities: HashMap<StringName, Entity> = HashMap()
+    val entities: Dictionary<StringName, Entity> = dictionaryOf()
     val navigator = Navigator()
 
     @Visible

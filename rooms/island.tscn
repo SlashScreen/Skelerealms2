@@ -1,20 +1,9 @@
 [gd_scene format=3 uid="uid://c1c58ixxexn6o"]
 
-[ext_resource type="PackedScene" uid="uid://m058jfwh4520" path="res://assets/nature/glTF/Grass_Common_Tall.gltf" id="1_iwfky"]
 [ext_resource type="Texture2D" uid="uid://cr34s4ti3f38l" path="res://assets/environment/sky.png" id="1_rmhow"]
-[ext_resource type="PackedScene" uid="uid://bjmsvqklnmyu1" path="res://assets/nature/glTF/Grass_Common_Short.gltf" id="2_e2cxf"]
-[ext_resource type="Texture2D" uid="uid://llmdn766et45" path="res://assets/nature/Textures/terrain/ground_rocks_albedo_height.png" id="3_7t3id"]
-[ext_resource type="Texture2D" uid="uid://87sy1dxe1k2i" path="res://assets/nature/Textures/terrain/grass_albedo_height.png" id="3_w1u2n"]
-[ext_resource type="Texture2D" uid="uid://bxmlujkm7ggrw" path="res://assets/nature/Textures/terrain/ground_rocks_normal_roughness.png" id="4_anbg0"]
+[ext_resource type="Terrain3DAssets" uid="uid://bq1a3en0p3kl8" path="res://terrain_resources/island/assets.res.tres" id="2_e2cxf"]
 [ext_resource type="PackedScene" uid="uid://bwggrf7sbmkcv" path="res://player/PlayerCharacter/player_character_scene.tscn" id="4_e2cxf"]
-[ext_resource type="Texture2D" uid="uid://lxpk2hpgo6rm" path="res://assets/nature/Textures/terrain/grass_normal_roughness.png" id="4_uljpk"]
-[ext_resource type="Texture2D" uid="uid://2qif8158lh5j" path="res://assets/nature/Textures/terrain/cliff_albedo_height.png" id="5_7t3id"]
-[ext_resource type="Texture2D" uid="uid://w3lgvjj2ggk0" path="res://assets/nature/Textures/terrain/cliff_normal_roughness.png" id="6_anbg0"]
-[ext_resource type="Texture2D" uid="uid://3kxokcy4r6eq" path="res://assets/nature/Textures/terrain/sand_albedo_height.png" id="9_winl8"]
-[ext_resource type="Texture2D" uid="uid://tw8dg2aqgivf" path="res://assets/nature/Textures/terrain/sand_normal_roughness.png" id="10_42miw"]
-[ext_resource type="Texture2D" uid="uid://bblycwoou75xv" path="res://assets/nature/Textures/terrain/tiles_albedo_height.png" id="11_sn3v3"]
 [ext_resource type="Texture2D" uid="uid://d0pirn4ef5q4p" path="res://addons/godot-prototype-texture/PNG/checker_512x512/checker_black_512x512.png" id="12_42miw"]
-[ext_resource type="Texture2D" uid="uid://ne6nkco0s3yy" path="res://assets/nature/Textures/terrain/tiles_normal_roughness.png" id="12_rmhow"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_gisid"]
 panorama = ExtResource("1_rmhow")
@@ -77,61 +66,6 @@ _shader_parameters = {
 world_background = 0
 auto_shader = true
 
-[sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_rkgea"]
-name = "Grass_Common_Tall"
-scene_file = ExtResource("1_iwfky")
-density = 6.0071483
-last_lod = 1
-last_shadow_lod = 0
-lod0_range = 128.0
-
-[sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_b6g2s"]
-name = "Grass_Common_Short"
-id = 1
-scene_file = ExtResource("2_e2cxf")
-last_lod = 1
-last_shadow_lod = 0
-lod0_range = 128.0
-
-[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_e2cxf"]
-name = "terrain_grass"
-albedo_texture = ExtResource("3_7t3id")
-normal_texture = ExtResource("4_anbg0")
-uv_scale = 0.307
-
-[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_winl8"]
-name = "cliff_albedo_height"
-id = 1
-albedo_texture = ExtResource("3_w1u2n")
-normal_texture = ExtResource("4_uljpk")
-uv_scale = 0.529
-
-[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_42miw"]
-name = "cliff_albedo_height"
-id = 2
-albedo_texture = ExtResource("5_7t3id")
-normal_texture = ExtResource("6_anbg0")
-uv_scale = 0.224
-detiling_rotation = 0.239
-
-[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_gsfkx"]
-name = "sand_albedo_height"
-id = 3
-albedo_texture = ExtResource("9_winl8")
-normal_texture = ExtResource("10_42miw")
-uv_scale = 0.199
-
-[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_gisid"]
-name = "tiles_albedo_height"
-id = 4
-albedo_texture = ExtResource("11_sn3v3")
-normal_texture = ExtResource("12_rmhow")
-uv_scale = 0.43
-
-[sub_resource type="Terrain3DAssets" id="Terrain3DAssets_b6g2s"]
-mesh_list = Array[Terrain3DMeshAsset]([SubResource("Terrain3DMeshAsset_rkgea"), SubResource("Terrain3DMeshAsset_b6g2s")])
-texture_list = Array[Terrain3DTextureAsset]([SubResource("Terrain3DTextureAsset_e2cxf"), SubResource("Terrain3DTextureAsset_winl8"), SubResource("Terrain3DTextureAsset_42miw"), SubResource("Terrain3DTextureAsset_gsfkx"), SubResource("Terrain3DTextureAsset_gisid")])
-
 [sub_resource type="PlaneMesh" id="PlaneMesh_6mfa5"]
 size = Vector2(2000, 2000)
 subdivide_width = 2000
@@ -157,7 +91,7 @@ shadow_enabled = true
 [node name="Terrain3D" type="Terrain3D" parent="." unique_id=479098842]
 data_directory = "res://terrains/island/"
 material = SubResource("Terrain3DMaterial_iwfky")
-assets = SubResource("Terrain3DAssets_b6g2s")
+assets = ExtResource("2_e2cxf")
 top_level = true
 metadata/_edit_lock_ = true
 

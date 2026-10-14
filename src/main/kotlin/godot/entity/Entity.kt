@@ -14,7 +14,7 @@ class Entity : Node() {
     val roomChanged by signal1<StringName>()
 
     @Emit
-    val simStateChanged by signal1<StringName>()
+    val simStateChanged by signal1<SimState>()
 
     @Visible
     public var transform: Transform3D = Transform3D.IDENTITY
@@ -30,11 +30,7 @@ class Entity : Node() {
             if (field == value) return
 
             field = value
-            simStateChanged.emit(when(value) {
-                SimState.FULL -> "full".asCachedStringName()
-                SimState.PARTIAL -> "partial".asCachedStringName()
-                else -> "none".asCachedStringName()
-            })
+            simStateChanged.emit(simState)
         }
 
     @Export
