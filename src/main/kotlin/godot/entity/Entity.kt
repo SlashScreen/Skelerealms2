@@ -90,9 +90,9 @@ class Entity : Node() {
 
     // TODO: Don't be full by default
 
-    public inline fun <reified T> getComponent(): EntityComponent? where T : EntityComponent {
+    public inline fun <reified T> getComponent(): T? where T : EntityComponent {
         val n = StringName(T::class.simpleName ?: "")
-        return components[n]
+        return components[n] as? T
     }
 
     @Register

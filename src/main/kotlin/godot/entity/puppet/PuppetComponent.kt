@@ -46,7 +46,7 @@ class PuppetComponent : EntityComponent() {
         }
     }
 
-    fun spawnPuppet() {
+    private fun spawnPuppet() {
         GD.print("spawn puppet")
         if (puppet != null) return
         puppetScene?.let { scene ->
@@ -57,7 +57,7 @@ class PuppetComponent : EntityComponent() {
         } ?: GD.pushError("Puppet scene not found!")
     }
 
-    fun destroyPuppet() {
+    private fun destroyPuppet() {
         GD.print("destroy puppet")
         puppet?.queueFree()
         puppet = null

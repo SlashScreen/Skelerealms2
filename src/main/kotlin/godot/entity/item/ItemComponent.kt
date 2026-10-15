@@ -33,6 +33,11 @@ class ItemComponent : EntityComponent() {
         prototype = res.prototype
     }
 
+    // TODO: Safeguard this
+    fun addToInventory(id: StringName) {
+        inventory = id
+    }
+
     @Register
     override fun saveDataKey(): StringName = "itemComponent".asCachedStringName()
 

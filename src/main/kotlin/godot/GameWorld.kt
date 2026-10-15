@@ -59,7 +59,7 @@ class GameWorld : Node() {
     }
 
     @Register
-    public fun getEntity(entityName: StringName): Entity? = entities[entityName]
+    public fun getEntity(entityName: StringName): Entity? = entities.get(entityName, null)
 
     @Register
     public fun entityExists(entityName: StringName): Boolean = entities.containsKey(entityName)

@@ -22,7 +22,7 @@ class RoomManager : Node() {
     @Export
     var gameWorld: GameWorld? = null
     var room: Node? = null
-    var rooms: HashMap<Int, Long> = hashMapOf()
+    var rooms: HashMap<StringName, Long> = hashMapOf()
     val regex = Regex(PATTERN)
 
     override fun _ready() {
@@ -40,7 +40,7 @@ class RoomManager : Node() {
                 val uid = ResourceLoader.getResourceUid(path)
                 // If valid, try match, try load.
                 if (uid != -1L) regex.matchEntire(path)?.let { matchResult ->
-                    matchResult.groupValues.getOrNull(1)?.let { rooms[it.hashCode()] = uid }
+                    matchResult.groupValues.getOrNull(1)?.let { rooms[it.asCachedStringName()] = uid }
                 }
             }
         }
@@ -48,9 +48,8 @@ class RoomManager : Node() {
 
     fun changeRoom(newRoom: StringName) {
         room?.queueFree()
-        // All this hash code shit because for some reason it wouldn't work eith string names.
-        val ps = ResourceLoader.loadAs<PackedScene>(ResourceUID.getIdPath(rooms[newRoom.toString().hashCode()] ?: run {
-            GD.pushError("Invalid room ID: $newRoom(${newRoom.toString().hashCode()}) - ${rooms.containsKey(newRoom.toString().hashCode())}")
+        val ps = ResourceLoader.loadAs<PackedScene>(ResourceUID.getIdPath(rooms[newRoom] ?: run {
+            GD.pushError("Invalid room ID: $newRoom(${newRoom.toString().hashCode()}) - ${rooms.containsKey(newRoom)}")
             return
         })) ?: run {
             GD.pushError("Unable to load room: $newRoom")
