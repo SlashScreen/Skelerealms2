@@ -3,7 +3,6 @@
 [ext_resource type="Texture2D" uid="uid://cr34s4ti3f38l" path="res://assets/environment/sky.png" id="1_rmhow"]
 [ext_resource type="Terrain3DAssets" uid="uid://ypcgr3h6ajxv" path="res://terrain_resources/island/assets.res" id="2_e2cxf"]
 [ext_resource type="Terrain3DMaterial" uid="uid://cxe7lkg646cj2" path="res://terrain_resources/island/material.res" id="2_rkgea"]
-[ext_resource type="PackedScene" uid="uid://bwggrf7sbmkcv" path="res://player/PlayerCharacter/player_character_scene.tscn" id="4_e2cxf"]
 [ext_resource type="Texture2D" uid="uid://d0pirn4ef5q4p" path="res://addons/godot-prototype-texture/PNG/checker_512x512/checker_black_512x512.png" id="12_42miw"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_gisid"]
@@ -53,9 +52,6 @@ metadata/_edit_lock_ = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.64673805, 0)
 mesh = SubResource("PlaneMesh_6mfa5")
 surface_material_override/0 = SubResource("StandardMaterial3D_r4683")
-
-[node name="PlayerCharacter" parent="." unique_id=1631114635 instance=ExtResource("4_e2cxf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -85.195404, 5.6633453, 70.060814)
 
 [node name="Town" type="Node3D" parent="." unique_id=1396701851]
 

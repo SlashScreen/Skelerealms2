@@ -29,7 +29,7 @@ class Entity : Node() {
     var simState: SimState = SimState.NONE
         set(value) {
             if (field == value) return
-            GD.print("set sim state: $value")
+            GD.print("$name: set sim state: $value")
 
             field = value
             simStateChanged.emit(simState)
@@ -39,6 +39,7 @@ class Entity : Node() {
     var room: StringName = "".asCachedStringName()
         set(value) {
             if (field == value) return
+            GD.print("$name: set room to $value")
 
             field = value
             roomChanged.emit(value)
@@ -80,8 +81,9 @@ class Entity : Node() {
     }
 
     private fun onGameWorldRoomChanged(newRoom: StringName) {
+        GD.print("$name: onGameWorldRoomChanged() called with: newRoom = $newRoom (in room $room)")
         simState = when {
-            room == newRoom -> SimState.FULL
+            newRoom == room -> SimState.FULL
             else -> SimState.PARTIAL
         }
     }

@@ -1,11 +1,12 @@
 import godot.gradle.GodotLanguage
 
 plugins {
-    id("com.utopia-rise.godot-jvm") version "1.0.0-rc3"
+    id("com.utopia-rise.godot-jvm") version "1.0.0-rc4-SNAPSHOT"
 }
 
 repositories {
     mavenCentral()
+    maven("https://central.sonatype.com/repository/maven-snapshots/")
 }
 
 godot {

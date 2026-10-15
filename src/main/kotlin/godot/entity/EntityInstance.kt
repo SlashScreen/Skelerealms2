@@ -50,6 +50,7 @@ class EntityInstance : Resource() {
         val n = Entity()
         n.name = id
         n.room = room
+        n.transform = transform
         components.map { r ->
             when (r) {
                 is EntityComponentInstance -> r

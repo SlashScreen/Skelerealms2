@@ -22,7 +22,7 @@ class PuppetComponent : EntityComponent() {
 
     var puppetScene: PackedScene? = null
     var puppet: Node3D? = null
-    var controlMode: ControlMode = ControlMode.EntityControl
+    var controlMode: ControlMode = ControlMode.PuppetControl // TODO: Change this
 
     override fun _ready() {
         entity?.simStateChanged?.connectMethod(this, PuppetComponent::trySpawnPuppet)
