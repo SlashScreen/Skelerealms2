@@ -4,6 +4,7 @@ import godot.GameWorld
 import godot.annotation.*
 import godot.api.Node
 import godot.core.*
+import godot.extension.connectLambda
 import godot.global.GD
 
 @Script
@@ -17,24 +18,25 @@ class Entity : Node() {
     val simStateChanged by signal1<SimState>()
 
     @Visible
-    public var transform: Transform3D = Transform3D.IDENTITY
+    var transform: Transform3D = Transform3D.IDENTITY
 
     @Visible
-    public var gameWorld: GameWorld? = null
+    var gameWorld: GameWorld? = null
 
     val components: HashMap<StringName, EntityComponent> = hashMapOf()
 
     @Export
-    public var simState: SimState = SimState.FULL
+    var simState: SimState = SimState.NONE
         set(value) {
             if (field == value) return
+            GD.print("set sim state: $value")
 
             field = value
             simStateChanged.emit(simState)
         }
 
     @Export
-    public var room: StringName = "".asCachedStringName()
+    var room: StringName = "".asCachedStringName()
         set(value) {
             if (field == value) return
 
@@ -42,34 +44,47 @@ class Entity : Node() {
             roomChanged.emit(value)
 
             gameWorld?.let {
-                simState = if (it.currentRoom == value)
-                    SimState.FULL
-                else
-                    SimState.PARTIAL
-
+                simState = when {
+                    it.currentRoom == value -> SimState.FULL
+                    else -> SimState.PARTIAL
+                }
             }
         }
 
     @Export
-    public var position: Vector3
+    var position: Vector3
         get() = transform.origin
         set(value) {
             transform.origin = value
         }
 
     @Export
-    public var rotation: Vector3
+    var rotation: Vector3
         get() = transform.basis.getEuler()
         set(value) {
             transform.basis = Basis(value)
         }
 
     @Export
-    public var quaternion: Quaternion
+    var quaternion: Quaternion
         get() = transform.basis.getQuaternion()
         set(value) {
             transform.basis = Basis(value)
         }
+
+    override fun _ready() {
+        gameWorld?.let { gw ->
+            gw.roomChanged.connectLambda { onGameWorldRoomChanged(it) }
+            onGameWorldRoomChanged(gw.room)
+        }
+    }
+
+    private fun onGameWorldRoomChanged(newRoom: StringName) {
+        simState = when {
+            room == newRoom -> SimState.FULL
+            else -> SimState.PARTIAL
+        }
+    }
 
     // TODO: Don't be full by default
 

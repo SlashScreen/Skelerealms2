@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://c1c58ixxexn6o"]
 
 [ext_resource type="Texture2D" uid="uid://cr34s4ti3f38l" path="res://assets/environment/sky.png" id="1_rmhow"]
-[ext_resource type="Terrain3DAssets" uid="uid://bq1a3en0p3kl8" path="res://terrain_resources/island/assets.res.tres" id="2_e2cxf"]
+[ext_resource type="Terrain3DAssets" uid="uid://ypcgr3h6ajxv" path="res://terrain_resources/island/assets.res" id="2_e2cxf"]
+[ext_resource type="Terrain3DMaterial" uid="uid://cxe7lkg646cj2" path="res://terrain_resources/island/material.res" id="2_rkgea"]
 [ext_resource type="PackedScene" uid="uid://bwggrf7sbmkcv" path="res://player/PlayerCharacter/player_character_scene.tscn" id="4_e2cxf"]
 [ext_resource type="Texture2D" uid="uid://d0pirn4ef5q4p" path="res://addons/godot-prototype-texture/PNG/checker_512x512/checker_black_512x512.png" id="12_42miw"]
 
@@ -18,53 +19,6 @@ ssr_enabled = true
 ssao_enabled = true
 ssil_enabled = true
 glow_enabled = true
-
-[sub_resource type="Gradient" id="Gradient_w4tlg"]
-offsets = PackedFloat32Array(0.2, 1)
-colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_r4683"]
-noise_type = 2
-frequency = 0.03
-cellular_jitter = 3.0
-cellular_return_type = 0
-domain_warp_enabled = true
-domain_warp_type = 1
-domain_warp_amplitude = 50.0
-domain_warp_fractal_type = 2
-domain_warp_fractal_lacunarity = 1.5
-domain_warp_fractal_gain = 1.0
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_f88ac"]
-noise = SubResource("FastNoiseLite_r4683")
-color_ramp = SubResource("Gradient_w4tlg")
-seamless = true
-
-[sub_resource type="Terrain3DMaterial" id="Terrain3DMaterial_iwfky"]
-_shader_parameters = {
-&"auto_base_texture": 2,
-&"auto_height_reduction": 0.0,
-&"auto_overlay_texture": 1,
-&"auto_slope": 3.0000001425,
-&"bias_distance": null,
-&"blend_sharpness": 0.0,
-&"depth_blur": 0.0,
-&"enable_macro_variation": null,
-&"enable_projection": null,
-&"flat_terrain_normals": null,
-&"macro_variation1": null,
-&"macro_variation2": null,
-&"macro_variation_slope": null,
-&"mipmap_bias": null,
-&"noise1_angle": null,
-&"noise1_offset": null,
-&"noise1_scale": null,
-&"noise2_scale": null,
-&"noise_texture": SubResource("NoiseTexture2D_f88ac"),
-&"projection_threshold": null
-}
-world_background = 0
-auto_shader = true
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_6mfa5"]
 size = Vector2(2000, 2000)
@@ -90,7 +44,7 @@ shadow_enabled = true
 
 [node name="Terrain3D" type="Terrain3D" parent="." unique_id=479098842]
 data_directory = "res://terrains/island/"
-material = SubResource("Terrain3DMaterial_iwfky")
+material = ExtResource("2_rkgea")
 assets = ExtResource("2_e2cxf")
 top_level = true
 metadata/_edit_lock_ = true

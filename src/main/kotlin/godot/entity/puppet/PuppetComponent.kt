@@ -40,7 +40,6 @@ class PuppetComponent : EntityComponent() {
 
     @Register
     fun trySpawnPuppet(state: SimState) {
-        // TODO: Don't do this multiple times?
         when (state) {
             SimState.FULL -> spawnPuppet()
             else -> destroyPuppet()
@@ -49,7 +48,7 @@ class PuppetComponent : EntityComponent() {
 
     fun spawnPuppet() {
         GD.print("spawn puppet")
-        if (puppet != null) destroyPuppet()
+        if (puppet != null) return
         puppetScene?.let { scene ->
             val ps = scene.instantiate() as Node3D
             addChild(ps)
@@ -59,7 +58,7 @@ class PuppetComponent : EntityComponent() {
     }
 
     fun destroyPuppet() {
-        GD.print("destroyPuppet")
+        GD.print("destroy puppet")
         puppet?.queueFree()
         puppet = null
     }

@@ -27,9 +27,7 @@ class RoomManager : Node() {
 
     override fun _ready() {
         fillFromPath(roomsPath)
-        GD.print(rooms)
         gameWorld!!.roomChanged.connectLambda { changeRoom(it) }
-        GD.print("Room signal connected")
     }
 
     private fun fillFromPath(path: String) {
@@ -42,7 +40,6 @@ class RoomManager : Node() {
                 val uid = ResourceLoader.getResourceUid(path)
                 // If valid, try match, try load.
                 if (uid != -1L) regex.matchEntire(path)?.let { matchResult ->
-                    GD.print("Found room: ${matchResult.groupValues.getOrNull(1)}")
                     matchResult.groupValues.getOrNull(1)?.let { rooms[it.hashCode()] = uid }
                 }
             }
@@ -50,8 +47,6 @@ class RoomManager : Node() {
     }
 
     fun changeRoom(newRoom: StringName) {
-        GD.print("Changing to $newRoom")
-
         room?.queueFree()
         // All this hash code shit because for some reason it wouldn't work eith string names.
         val ps = ResourceLoader.loadAs<PackedScene>(ResourceUID.getIdPath(rooms[newRoom.toString().hashCode()] ?: run {
