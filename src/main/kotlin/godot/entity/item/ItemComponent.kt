@@ -12,7 +12,7 @@ import godot.global.GD
 
 @Script
 class ItemComponent : EntityComponent() {
-    var inventory: StringName? = null
+    private var inventory: StringName? = null
 
     @Visible
     public var containedInventory: StringName

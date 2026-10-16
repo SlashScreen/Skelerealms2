@@ -6,12 +6,15 @@ import godot.core.Dictionary
 import godot.core.StringName
 import godot.entity.EntityComponent
 import godot.entity.item.ItemComponent
+import godot.loot.LootTree
 
 @Script
 class InventoryComponent : EntityComponent() {
     val inventory: MutableSet<StringName> = mutableSetOf()
     val currencies: HashMap<StringName, Int> = HashMap()
     val equipment: HashMap<StringName, StringName?> = HashMap()
+
+    var lootTree: LootTree? = null
 
     @Visible
     var maxCarryWeight: Float = 100f // TODO: Allow this to change and stuff
@@ -48,7 +51,7 @@ class InventoryComponent : EntityComponent() {
     private fun canGiveItem(id: StringName): Boolean = inventory.contains(id) // TODO: Quest item checks
 
     fun canAcceptTransaction(tx: InventoryTransaction): AcceptedInventoryTransaction? {
-        return if (tx.valid() && if (tx.to == entity?.name) {
+        return if (tx.valid(entity?.gameWorld ?: return null) && if (tx.to == entity?.name) {
                 // Make sure we can take the items
                 tx.items?.let { items -> items.all { id -> canTakeItem(id) } } ?: true
             } else { // Take transaction from
