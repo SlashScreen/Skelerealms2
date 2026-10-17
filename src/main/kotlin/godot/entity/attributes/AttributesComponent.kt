@@ -43,21 +43,21 @@ class AttributesComponent : EntityComponent() {
         perks.contains(perk) || (instance?.let { (it as AttributesComponentPrototype).perks.has(perk) } ?: false)
 
     override fun getSaveData(): Dictionary<StringName, Any?> =
-        Dictionary<StringName, Any?>().apply {
-            set("attributes".asCachedStringName(), attributes)
-            set("perks".asCachedStringName(), perks.toVariantArray())
-        }
+        dictionaryOf(
+            "attributes".asCachedStringName() to attributes,
+            "perks".asCachedStringName() to perks.toVariantArray(),
+        )
 
     override fun loadFromData(data: Dictionary<StringName, Any?>) {
         attributes.clear()
         perks.clear()
 
-        data["attributes".asCachedStringName()]?.let { attr ->
-            (attr as? Dictionary<StringName, Float>)?.let {
-                attributes.putAll(it)
-            }
-        }
-        data["perks".asCachedStringName()]?.let { pks -> (pks as? VariantArray<StringName>)?.let { perks.addAll(it) } }
+        data["attributes".asCachedStringName()]
+            ?.let { attr -> (attr as? Dictionary<StringName, Float>) }
+            ?.let { attributes.putAll(it) }
+        data["perks".asCachedStringName()]
+            ?.let { pks -> (pks as? VariantArray<StringName>) }
+            ?.let { perks.addAll(it) }
     }
 
     override fun saveDataKey(): StringName = "attributesComponent".asCachedStringName()
