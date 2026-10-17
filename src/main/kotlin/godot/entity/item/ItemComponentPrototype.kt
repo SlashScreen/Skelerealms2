@@ -28,7 +28,10 @@ class ItemComponentPrototype : EntityComponentPrototype() {
 
     @Export
     var tags: VariantArray<StringName> = VariantArray()
-    
+
+    @Export
+    var equipmentSlots: VariantArray<StringName> = VariantArray()
+
     val tagsSet: Set<StringName>
         get() = internalTagsSet ?: tags.toSet().also { internalTagsSet = it }
     private var internalTagsSet: Set<StringName>? = null

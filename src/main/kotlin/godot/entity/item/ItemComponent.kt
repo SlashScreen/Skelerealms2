@@ -39,10 +39,21 @@ class ItemComponent : EntityComponent() {
         get() = internalQuestItem ?: instance?.let { (it as ItemComponentPrototype).questItem } ?: false
 
     @Visible
+    val equipmentSlots: VariantArray<StringName>
+        get() = instance?.let { (it as ItemComponentPrototype).equipmentSlots } ?: VariantArray()
+
+    val equipmentSlotsSet: Set<StringName>
+        get() = internalEquipmentSlots
+            ?: instance?.let { (it as ItemComponentPrototype).equipmentSlots.toSet() }
+                .also { internalEquipmentSlots = it }
+            ?: emptySet()
+
+    @Visible
     val inInventory: Boolean
         get() = inventory != null
 
     private var internalQuestItem: Boolean? = null
+    private var internalEquipmentSlots: Set<StringName>? = null
     private var inventory: StringName? = null
     private val tags: MutableSet<StringName> = mutableSetOf()
 
