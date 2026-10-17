@@ -8,6 +8,9 @@ import godot.entity.EntityInstance
 import godot.global.GD
 import godot.navigation.Navigator
 
+// TODO
+// Move rooms to being nodes
+
 @Script
 class GameWorld : Node() {
     @Export
