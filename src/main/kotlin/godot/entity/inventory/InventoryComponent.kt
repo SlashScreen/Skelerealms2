@@ -4,6 +4,7 @@ import godot.annotation.Script
 import godot.annotation.Visible
 import godot.core.Dictionary
 import godot.core.StringName
+import godot.core.asCachedStringName
 import godot.entity.EntityComponent
 import godot.entity.item.ItemComponent
 import godot.loot.LootTree
@@ -15,7 +16,7 @@ class InventoryComponent : EntityComponent() {
     val equipment: HashMap<StringName, StringName?> = HashMap()
 
     val lootTree: LootTree?
-        get() = instance?.let { i -> (i as InventoryComponentPrototype).lootTree }
+        get() = instance?.let { (it as InventoryComponentPrototype).lootTree }
 
     @Visible
     var maxCarryWeight: Float = 100f // TODO: Allow this to change and stuff
@@ -97,9 +98,7 @@ class InventoryComponent : EntityComponent() {
         TODO("Not yet implemented")
     }
 
-    override fun saveDataKey(): StringName {
-        TODO("Not yet implemented")
-    }
+    override fun saveDataKey(): StringName = "inventoryComponent".asCachedStringName()
 
     // This is an attempt to use the type system to enforce checking
     // I don't know if it works.

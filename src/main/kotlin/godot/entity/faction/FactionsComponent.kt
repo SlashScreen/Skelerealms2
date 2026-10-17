@@ -11,19 +11,19 @@ class FactionsComponent : EntityComponent() {
 
     @Register
     fun isInFaction(fName: StringName): Boolean =
-        factions.containsKey(fName) || (instance?.let { i -> (i as FactionsComponentPrototype).factions.containsKey(fName) }
+        factions.containsKey(fName) || (instance?.let { (it as FactionsComponentPrototype).factions.containsKey(fName) }
             ?: false)
 
     @Register
     fun getFactionRank(fName: StringName): Long =
-        factions[fName] ?: instance?.let { i -> (i as FactionsComponentPrototype).factions.get(fName, null) } ?: 0L
+        factions[fName] ?: instance?.let { (it as FactionsComponentPrototype).factions.get(fName, null) } ?: 0L
 
     @Register
     fun setFactionRank(fName: StringName, rank: Long) = factions.put(fName, rank)
 
     @Register
     fun getFactions(): VariantArray<StringName> = factions.keys.apply {
-        instance?.let { i -> (i as FactionsComponentPrototype).factions.keys() }?.let { fs -> addAll(fs) }
+        instance?.let { (it as FactionsComponentPrototype).factions.keys() }?.let { fs -> addAll(fs) }
     }.toVariantArray()
 
     override fun getSaveData(): Dictionary<StringName, Any?> =

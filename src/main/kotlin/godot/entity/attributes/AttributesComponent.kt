@@ -3,20 +3,24 @@ package godot.entity.attributes
 import godot.annotation.Register
 import godot.annotation.Script
 import godot.annotation.Visible
-import godot.core.Dictionary
-import godot.core.StringName
-import godot.core.asCachedStringName
+import godot.core.*
 import godot.entity.EntityComponent
 
 @Script
 class AttributesComponent : EntityComponent() {
     private val attributes = Dictionary<StringName, Float>()
+    private val perks: MutableSet<StringName> = mutableSetOf()
 
     @Visible
     val allAttributes: Dictionary<StringName, Float>
-        get() = instance?.let { i ->
-            attributes.duplicate(false).apply { merge((i as AttributesComponentPrototype).attributes) }
+        get() = instance?.let {
+            attributes.duplicate(false).apply { merge((it as AttributesComponentPrototype).attributes) }
         } ?: attributes
+
+    @Visible
+    val allPerks: VariantArray<StringName>
+        get() = instance?.let { perks.toVariantArray().apply { addAll((it as AttributesComponentPrototype).perks) } }
+            ?: perks.toVariantArray()
 
     @Register
     fun setAttribute(aName: StringName, value: Float) {
@@ -24,19 +28,36 @@ class AttributesComponent : EntityComponent() {
     }
 
     @Register
-    fun getAttribute(aName: StringName): Float =
+    fun getAttribute(aName: StringName, default: Float = 0f): Float =
         attributes.getOrDefault(aName, null)
-            ?: instance?.let { i -> (i as AttributesComponentPrototype).attributes.getOrDefault(aName, null) }
-            ?: 0F
+            ?: instance?.let { (it as AttributesComponentPrototype).attributes.getOrDefault(aName, null) }
+            ?: default
+
+    @Register
+    fun addPerk(perk: StringName) {
+        perks.add(perk)
+    }
+
+    @Register
+    fun hasPerk(perk: StringName): Boolean =
+        perks.contains(perk) || (instance?.let { (it as AttributesComponentPrototype).perks.has(perk) } ?: false)
 
     override fun getSaveData(): Dictionary<StringName, Any?> =
-        Dictionary<StringName, Any?>().apply { attributes.forEach { (name, value) -> set(name, value) } }
+        Dictionary<StringName, Any?>().apply {
+            set("attributes".asCachedStringName(), attributes)
+            set("perks".asCachedStringName(), perks.toVariantArray())
+        }
 
     override fun loadFromData(data: Dictionary<StringName, Any?>) {
         attributes.clear()
-        data.forEach { (name, value) ->
-            (value as? Float)?.let { attributes[name] = it }
+        perks.clear()
+
+        data["attributes".asCachedStringName()]?.let { attr ->
+            (attr as? Dictionary<StringName, Float>)?.let {
+                attributes.putAll(it)
+            }
         }
+        data["perks".asCachedStringName()]?.let { pks -> (pks as? VariantArray<StringName>)?.let { perks.addAll(it) } }
     }
 
     override fun saveDataKey(): StringName = "attributesComponent".asCachedStringName()

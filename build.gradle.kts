@@ -1,7 +1,7 @@
 import godot.gradle.GodotLanguage
 
 plugins {
-    id("com.utopia-rise.godot-jvm") version "1.0.0-rc4-SNAPSHOT"
+    id("com.utopia-rise.godot-jvm") version "1.0.0"
 }
 
 repositories {

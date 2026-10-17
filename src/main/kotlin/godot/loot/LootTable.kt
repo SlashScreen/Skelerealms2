@@ -6,15 +6,16 @@ import godot.api.RefCounted
 import godot.core.Dictionary
 import godot.core.StringName
 import godot.core.VariantArray
+import godot.entity.item.ItemComponentPrototype
 
 @Script
 class LootTable() : RefCounted() {
-    val prototypes: VariantArray<Int> = VariantArray()
+    val prototypes: VariantArray<ItemComponentPrototype> = VariantArray()
     val currencies: Dictionary<StringName, Int> = Dictionary()
     val uniqueItems: VariantArray<StringName> = VariantArray()
 
     @Register
-    public fun merge(other: LootTable): LootTable {
+    fun merge(other: LootTable): LootTable {
         prototypes.appendArray(other.prototypes)
         uniqueItems.appendArray(other.uniqueItems)
 
@@ -28,6 +29,6 @@ class LootTable() : RefCounted() {
 
     companion object {
         @Register
-        public fun builder() = LootTableBuilder()
+        fun builder() = LootTableBuilder()
     }
 }

@@ -1,7 +1,7 @@
 class_name LootPrototype
 extends LootTree
 
-@export var prototype: ItemPrototype
+@export var prototype: ItemComponentPrototype
 
 
 func resolve(_userdata: Dictionary = { }) -> LootTable:

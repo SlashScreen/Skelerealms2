@@ -76,7 +76,7 @@ class Entity : Node() {
     override fun _ready() {
         gameWorld?.let { gw ->
             gw.roomChanged.connectLambda { onGameWorldRoomChanged(it) }
-            onGameWorldRoomChanged(gw.room)
+            onGameWorldRoomChanged(gw.currentRoom)
         }
     }
 

@@ -7,7 +7,7 @@ import godot.core.Dictionary
 import godot.core.StringName
 
 abstract class LootTree : Resource() {
-	/* Resolve the loot table. */
+	/** Resolve the loot table. */
 	@Register
 	abstract fun resolve(userdata: Dictionary<StringName, Any?>): LootTable
 }
