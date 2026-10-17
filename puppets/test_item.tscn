@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://dinq6eyweohn"]
+
+[ext_resource type="Script" uid="uid://knfuwkeiq1pd" path="res://src/main/kotlin/godot/world/Interactible.kt" id="1_p81d3"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6mfa5"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_6mfa5"]
+
+[node name="RigidBody3D" type="RigidBody3D" unique_id=965347843]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1308066494]
+shape = SubResource("BoxShape3D_6mfa5")
+
+[node name="Interactible" type="Area3D" parent="." unique_id=1578080298 node_paths=PackedStringArray("inherit_name_from")]
+script = ExtResource("1_p81d3")
+inherit_name_from = NodePath("..")
+metadata/_custom_type_script = "uid://knfuwkeiq1pd"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactible" unique_id=2076999455]
+shape = SubResource("BoxShape3D_6mfa5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=2134340299]
+mesh = SubResource("BoxMesh_6mfa5")

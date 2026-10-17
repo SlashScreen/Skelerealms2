@@ -1,5 +1,5 @@
 @abstract
-class_name EntityComponentInstanceGD
+class_name EntityComponentPrototypeGD
 extends Resource
 
 

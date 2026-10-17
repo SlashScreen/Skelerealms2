@@ -55,6 +55,7 @@ class PuppetComponent : EntityComponent() {
             addChild(ps)
             puppet = ps
             ps.globalTransform = entity?.transform ?: Transform3D.IDENTITY
+            entity?.let { ps.name = it.name } // TODO: Figure out something for the generic item names
         } ?: GD.pushError("Puppet scene not found!")
     }
 

@@ -6,11 +6,16 @@ import godot.api.PackedScene
 import godot.core.Dictionary
 import godot.core.StringName
 import godot.core.VariantArray
+import godot.core.asCachedStringName
 import godot.entity.EntityComponent
 import godot.entity.EntityComponentPrototype
 
 @Script
 class ItemComponentPrototype : EntityComponentPrototype() {
+    /** Leave empty for ID name instead */
+    @Export
+    var itemName: StringName = "".asCachedStringName()
+
     @Export
     var model: PackedScene? = null
 

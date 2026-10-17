@@ -7,6 +7,6 @@ import godot.core.VariantArray
 
 @Script
 class EntityPrototype: Resource() {
-    @HintString("24/17:EntityComponentInstance,EntityComponentInstanceGD")
+    @HintString("24/17:EntityComponentPrototype,EntityComponentPrototypeGD")
     var components: VariantArray<Resource> = VariantArray()
 }

@@ -222,7 +222,6 @@ class InventoryComponent : EntityComponent() {
         data["currencies".asCachedStringName()]?.let { c -> currencies.putAll((c as Dictionary<StringName, Int>)) }
         internalMaxCarryWeight = null
         data["maxCarryWeight".asCachedStringName()]?.let { m -> internalMaxCarryWeight = (m as Float) }
-
     }
 
     override fun saveDataKey(): StringName = "inventoryComponent".asCachedStringName()

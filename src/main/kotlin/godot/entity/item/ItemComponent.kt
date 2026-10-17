@@ -64,12 +64,15 @@ class ItemComponent : EntityComponent() {
 
     @Register
     fun hasTag(tag: StringName): Boolean =
-        tags.contains(tag) || instance?.let { (it as ItemComponentPrototype).tags.contains(tag) } ?: false
+        tags.contains(tag) || instance?.let { (it as ItemComponentPrototype).tagsSet.contains(tag) } ?: false
 
     @Register
     fun addTag(tag: StringName) {
         tags.add(tag)
     }
+
+    @Register
+    fun translatedItemName(): String = tr(instance?.let { (it as ItemComponentPrototype).itemName } ?: entity?.name ?: "".asCachedStringName())
 
     @Register
     override fun saveDataKey(): StringName = "itemComponent".asCachedStringName()
