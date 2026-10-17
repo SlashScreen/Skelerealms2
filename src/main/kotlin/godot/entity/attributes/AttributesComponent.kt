@@ -15,7 +15,7 @@ class AttributesComponent : EntityComponent() {
     @Visible
     val allAttributes: Dictionary<StringName, Float>
         get() = instance?.let { i ->
-            attributes.duplicate(false).apply { merge((i as AttributesComponentInstance).attributes) }
+            attributes.duplicate(false).apply { merge((i as AttributesComponentPrototype).attributes) }
         } ?: attributes
 
     @Register
@@ -26,7 +26,7 @@ class AttributesComponent : EntityComponent() {
     @Register
     fun getAttribute(aName: StringName): Float =
         attributes.getOrDefault(aName, null)
-            ?: instance?.let { i -> (i as AttributesComponentInstance).attributes.getOrDefault(aName, null) }
+            ?: instance?.let { i -> (i as AttributesComponentPrototype).attributes.getOrDefault(aName, null) }
             ?: 0F
 
     override fun getSaveData(): Dictionary<StringName, Any?> =

@@ -144,7 +144,7 @@ class Entity : Node() {
 
     @Register
     public fun addComponentFromInstance(
-        instance: EntityComponentInstance,
+        instance: EntityComponentPrototype,
         userdata: Dictionary<StringName, Any?> = Dictionary()
     ) {
         val n = instance.constructComponent(userdata)

@@ -2,12 +2,12 @@
 
 [ext_resource type="PackedScene" uid="uid://bwggrf7sbmkcv" path="res://player/PlayerCharacter/player_character_scene.tscn" id="1_g0i2x"]
 [ext_resource type="Script" uid="uid://b7m88jepq2tfm" path="res://src/main/kotlin/godot/entity/EntityInstance.kt" id="1_iviwr"]
-[ext_resource type="Script" uid="uid://b5yipdu4lgdug" path="res://src/main/kotlin/godot/entity/puppet/PuppetComponentInstance.kt" id="2_ha1yq"]
+[ext_resource type="Script" uid="uid://o6dlmf7u57nr" path="res://src/main/kotlin/godot/entity/puppet/PuppetComponentPrototype.kt" id="2_ha1yq"]
 [ext_resource type="Script" uid="uid://cb847yisc0cal" path="res://src/main/kotlin/godot/entity/EntityPrototype.kt" id="3_ha1yq"]
-[ext_resource type="Script" uid="uid://bgxybj3kmpxcu" path="res://src/main/kotlin/godot/entity/attributes/AttributesComponentInstance.kt" id="3_m2m8s"]
-[ext_resource type="Script" uid="uid://u4rm6kuepxs8" path="res://src/main/kotlin/godot/entity/faction/FactionsComponentInstance.kt" id="4_himet"]
+[ext_resource type="Script" uid="uid://k3ppy6ciod4x" path="res://src/main/kotlin/godot/entity/attributes/AttributesComponentPrototype.kt" id="3_m2m8s"]
+[ext_resource type="Script" uid="uid://nrlx4k2ko7te" path="res://src/main/kotlin/godot/entity/faction/FactionsComponentPrototype.kt" id="4_himet"]
 [ext_resource type="Script" uid="uid://d4b6ljhqlaoa8" path="res://src/main/gdscript/godot/loot/loot_unique_items.gd" id="5_ey6vg"]
-[ext_resource type="Script" uid="uid://j04stuav22pi" path="res://src/main/kotlin/godot/entity/inventory/InventoryComponentInstance.kt" id="5_himet"]
+[ext_resource type="Script" uid="uid://bhg07whv32mhf" path="res://src/main/kotlin/godot/entity/inventory/InventoryComponentPrototype.kt" id="5_himet"]
 
 [sub_resource type="Resource" id="Resource_gff8u"]
 script = ExtResource("2_ha1yq")

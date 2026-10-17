@@ -21,7 +21,7 @@ class PuppetComponent : EntityComponent() {
     }
 
     val puppetScene: PackedScene?
-        get() = instance?.let { i -> (i as PuppetComponentInstance).puppetScene }
+        get() = instance?.let { i -> (i as PuppetComponentPrototype).puppetScene }
     var puppet: Node3D? = null
     var controlMode: ControlMode = ControlMode.PuppetControl // TODO: Change this
 

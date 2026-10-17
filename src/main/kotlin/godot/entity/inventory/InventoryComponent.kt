@@ -14,7 +14,7 @@ class InventoryComponent : EntityComponent() {
     val currencies: HashMap<StringName, Int> = HashMap()
     val equipment: HashMap<StringName, StringName?> = HashMap()
 
-    var lootTree: LootTree? = instance?.let { i -> (i as InventoryComponentInstance).lootTree }
+    var lootTree: LootTree? = instance?.let { i -> (i as InventoryComponentPrototype).lootTree }
 
     @Visible
     var maxCarryWeight: Float = 100f // TODO: Allow this to change and stuff
@@ -25,7 +25,7 @@ class InventoryComponent : EntityComponent() {
             val en = entity?.gameWorld?.getEntity(id) ?: return acc
             val ic = en.getComponent<ItemComponent>() ?: return acc
             // TODO: Quest item checks
-            acc + (ic.prototype?.weight ?: 0F)
+            acc + ic.weight
         }
     // TODO:
     // 2. equipment

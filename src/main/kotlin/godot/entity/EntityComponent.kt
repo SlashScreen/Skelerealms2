@@ -13,7 +13,7 @@ abstract class EntityComponent : Node() {
     var dirty: Boolean =
         false // Used for savegame stuff. Set to true when loading from a save point or setting a value.
     @Export
-    var instance: EntityComponentInstance? = null
+    var instance: EntityComponentPrototype? = null
 
     fun handlesSaveData(key: StringName): Boolean = key == saveDataKey()
 

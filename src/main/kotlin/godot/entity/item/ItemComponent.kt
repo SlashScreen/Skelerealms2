@@ -1,8 +1,10 @@
 package godot.entity.item
 
+import godot.annotation.Export
 import godot.annotation.Register
 import godot.annotation.Script
 import godot.annotation.Visible
+import godot.api.PackedScene
 import godot.core.Dictionary
 import godot.core.StringName
 import godot.core.asCachedStringName
@@ -21,8 +23,14 @@ class ItemComponent : EntityComponent() {
             inventory = if (value.toString().isEmpty()) null else value
         }
 
-    @Visible
-    public var prototype: ItemPrototype? = instance?.let { i -> (i as ItemComponentInstance).prototype }
+    @Export
+    var model: PackedScene? = instance?.let { (it as ItemComponentPrototype).model }
+    @Export
+    var baseCurrency: StringName = instance?.let { (it as ItemComponentPrototype).baseCurrency } ?: StringName("")
+    @Export
+    var baseCost: Int = instance?.let { (it as ItemComponentPrototype).baseCost } ?: 0
+    @Export
+    var weight: Float = instance?.let { (it as ItemComponentPrototype).weight } ?: 0F
 
     @Visible
     public val inInventory: Boolean

@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://doqtquety2ey4" path="res://puppets/test_puppet.tscn" id="1_3bfjs"]
 [ext_resource type="Script" uid="uid://b7m88jepq2tfm" path="res://src/main/kotlin/godot/entity/EntityInstance.kt" id="2_3bfjs"]
 [ext_resource type="Script" uid="uid://cb847yisc0cal" path="res://src/main/kotlin/godot/entity/EntityPrototype.kt" id="3_17sp5"]
-[ext_resource type="Script" uid="uid://b5yipdu4lgdug" path="res://src/main/kotlin/godot/entity/puppet/PuppetComponentInstance.kt" id="3_bvjey"]
+[ext_resource type="Script" uid="uid://o6dlmf7u57nr" path="res://src/main/kotlin/godot/entity/puppet/PuppetComponentPrototype.kt" id="3_bvjey"]
 
 [sub_resource type="Resource" id="Resource_df0ig"]
 script = ExtResource("3_bvjey")

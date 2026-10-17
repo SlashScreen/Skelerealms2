@@ -7,7 +7,7 @@ import godot.core.Dictionary
 import godot.core.StringName
 
 @Script
-abstract class EntityComponentInstance : Resource() {
+abstract class EntityComponentPrototype : Resource() {
     @Register
     abstract fun constructComponent(userdata: Dictionary<StringName, Any?>): EntityComponent
 }

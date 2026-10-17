@@ -7,7 +7,7 @@ import godot.core.StringName
 import godot.core.asCachedStringName
 import godot.global.GD
 
-class EntityComponentInstanceGd : EntityComponentInstance() {
+class EntityComponentPrototypeGd : EntityComponentPrototype() {
     var resource: Resource? = null
 
     override fun constructComponent(userdata: Dictionary<StringName, Any?>): EntityComponent =

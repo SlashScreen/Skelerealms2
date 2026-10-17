@@ -6,12 +6,12 @@ import godot.api.Resource
 import godot.core.Dictionary
 import godot.core.StringName
 import godot.entity.EntityComponent
-import godot.entity.EntityComponentInstance
+import godot.entity.EntityComponentPrototype
 import godot.loot.LootTree
 import godot.loot.LootTreeGd
 
 @Script
-class InventoryComponentInstance : EntityComponentInstance() {
+class InventoryComponentPrototype : EntityComponentPrototype() {
     @HintString("LootTree")
     var lootTreeGd: Resource? = null
     val lootTree: LootTree?

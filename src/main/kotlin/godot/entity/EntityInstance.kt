@@ -1,7 +1,6 @@
 package godot.entity
 
 import godot.annotation.Export
-import godot.annotation.HintString
 import godot.annotation.Register
 import godot.annotation.Script
 import godot.annotation.Visible
@@ -52,8 +51,8 @@ class EntityInstance : Resource() {
         n.transform = transform
         prototype?.components?.map { r ->
             when (r) {
-                is EntityComponentInstance -> r
-                else -> EntityComponentInstanceGd().apply { resource = r } // TODO: Validate?
+                is EntityComponentPrototype -> r
+                else -> EntityComponentPrototypeGd().apply { resource = r } // TODO: Validate?
             }
         }?.forEach { c -> n.addComponentFromInstance(c, userdata) }
         GD.print("Entity $id constructed!")
