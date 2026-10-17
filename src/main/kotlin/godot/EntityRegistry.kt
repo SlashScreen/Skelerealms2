@@ -16,12 +16,12 @@ class EntityRegistry : Resource() {
     @Dir
     var resPath: String = ""
 
-    val ids: HashMap<StringName, Long> = hashMapOf()
-    var cache: HashMap<StringName, EntityInstance> = hashMapOf()
-    val regex = Regex(PATTERN)
+    private val ids: HashMap<StringName, Long> = hashMapOf()
+    private var cache: HashMap<StringName, EntityInstance> = hashMapOf()
+    private val regex = Regex(PATTERN)
 
     // Operates on state
-    fun fillFromPath(path: String) {
+    private fun fillFromPath(path: String) {
         val paths = ResourceLoader.listDirectory(path).map { p -> path + p }
 
         paths.forEach { path ->
@@ -38,21 +38,21 @@ class EntityRegistry : Resource() {
     }
 
     @Register
-    public fun initialize() {
+    fun initialize() {
         fillFromPath(resPath)
     }
 
     @Register
-    public fun load(name: StringName): EntityInstance? = ids[name]?.let { uid ->
+    fun load(name: StringName): EntityInstance? = ids[name]?.let { uid ->
         cache[name] ?: ResourceLoader.loadAs<EntityInstance>(ResourceUID.getIdPath(uid), "EntityInstance")
             ?.also { entityInstance -> cache[name] = entityInstance }
     }
 
     @Register
-    public fun getAllStringIDs(): VariantArray<StringName> = variantArrayOf(*ids.keys.toTypedArray())
+    fun getAllStringIDs(): VariantArray<StringName> = variantArrayOf(*ids.keys.toTypedArray())
 
     @Register
-    public fun loadAllBlocking(): Dictionary<StringName, EntityInstance> {
+    fun loadAllBlocking(): Dictionary<StringName, EntityInstance> {
         val dictionary = Dictionary<StringName, EntityInstance>()
         ids.forEach { (name, uid) ->
             GD.print("Loading $name for $uid")
@@ -65,12 +65,12 @@ class EntityRegistry : Resource() {
     }
 
     @Register
-    public fun exists(name: StringName): Boolean = ids.containsKey(name)
+    fun exists(name: StringName): Boolean = ids.containsKey(name)
 
     @Register
-    public fun getId(name: StringName): Long = ids[name] ?: -1
+    fun getId(name: StringName): Long = ids[name] ?: -1
 
     companion object {
-        const val PATTERN = """.*/(.*)\.(?:res|tres)"""
+        private const val PATTERN = """.*/(.*)\.(?:res|tres)"""
     }
 }

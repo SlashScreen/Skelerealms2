@@ -17,34 +17,34 @@ class EntityInstance : Resource() {
     @Export var prototype: EntityPrototype? = null
 
     @Export
-    public var room: StringName = "".asCachedStringName()
+    var room: StringName = "".asCachedStringName()
 
     @Visible
-    public var transform: Transform3D = Transform3D.IDENTITY
+    var transform: Transform3D = Transform3D.IDENTITY
 
     @Export
-    public var position: Vector3
+    var position: Vector3
         get() = transform.origin
         set(value) {
             transform.origin = value
         }
 
     @Export
-    public var rotation: Vector3
+    var rotation: Vector3
         get() = transform.basis.getEuler()
         set(value) {
             transform.basis = Basis(value)
         }
 
     @Export
-    public var quaternion: Quaternion
+    var quaternion: Quaternion
         get() = transform.basis.getQuaternion()
         set(value) {
             transform.basis = Basis(value)
         }
 
     @Register
-    public fun constructEntity(userdata: Dictionary<StringName, Any?> = Dictionary()): Entity {
+    fun constructEntity(userdata: Dictionary<StringName, Any?> = Dictionary()): Entity {
         val n = Entity()
         n.name = id
         n.room = room
@@ -60,7 +60,7 @@ class EntityInstance : Resource() {
     }
 
     companion object {
-        val allowedChars = ('A'..'F').plusElement('0'..'9')
-        const val RANDOM_NAME_LENGTH = 8
+        private val allowedChars = ('A'..'F').plusElement('0'..'9')
+        private const val RANDOM_NAME_LENGTH = 8
     }
 }

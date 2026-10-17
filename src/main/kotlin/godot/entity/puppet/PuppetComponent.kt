@@ -20,9 +20,9 @@ class PuppetComponent : EntityComponent() {
         PuppetControl  // Entity position is set to puppet position
     }
 
-    val puppetScene: PackedScene?
+    private val puppetScene: PackedScene?
         get() = instance?.let { i -> (i as PuppetComponentPrototype).puppetScene }
-    var puppet: Node3D? = null
+    private var puppet: Node3D? = null
     var controlMode: ControlMode = ControlMode.PuppetControl // TODO: Change this
 
     override fun _ready() {

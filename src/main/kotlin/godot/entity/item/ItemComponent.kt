@@ -17,7 +17,7 @@ class ItemComponent : EntityComponent() {
     private var inventory: StringName? = null
 
     @Visible
-    public var containedInventory: StringName
+    var containedInventory: StringName
         get() = inventory ?: "".asCachedStringName()
         set(value) {
             inventory = if (value.toString().isEmpty()) null else value
@@ -33,7 +33,7 @@ class ItemComponent : EntityComponent() {
     var weight: Float = instance?.let { (it as ItemComponentPrototype).weight } ?: 0F
 
     @Visible
-    public val inInventory: Boolean
+    val inInventory: Boolean
         get() = inventory != null
 
     // TODO: Safeguard this

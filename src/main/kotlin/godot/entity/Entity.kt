@@ -23,7 +23,7 @@ class Entity : Node() {
     @Visible
     var gameWorld: GameWorld? = null
 
-    val components: HashMap<StringName, EntityComponent> = hashMapOf()
+    private val components: HashMap<StringName, EntityComponent> = hashMapOf()
 
     @Export
     var simState: SimState = SimState.NONE
@@ -90,34 +90,30 @@ class Entity : Node() {
 
     // TODO: Don't be full by default
 
-    public inline fun <reified T> getComponent(): T? where T : EntityComponent {
+    inline fun <reified T> getComponent(): T? where T : EntityComponent {
         val n = StringName(T::class.simpleName ?: "")
-        return components[n] as? T
+        return getComponentByName(n) as? T
     }
 
     @Register
-    public fun getComponentByName(n: StringName): EntityComponent? {
-        return components[n]
-    }
+    fun getComponentByName(n: StringName): EntityComponent? = components[n]
 
     @Register
-    public fun getComponentByType(script: godot.api.Script): EntityComponent? {
-        return components[script.getGlobalName()]
-    }
+    fun getComponentByType(script: godot.api.Script): EntityComponent? = components[script.getGlobalName()]
 
-    public inline fun <reified T> addComponent(component: T) where T : EntityComponent {
+    inline fun <reified T> addComponent(component: T) where T : EntityComponent {
         val n = StringName(T::class.simpleName ?: "")
-        if (components.containsKey(n)) {
+        if (hasComponent(n)) {
             GD.pushWarning("Attempted to add a component twice: $n")
         } else {
-            components[n] = component
+            addComponentByName(n, component)
             addChild(component)
             component.entity = this
         }
     }
 
     @Register
-    public fun addComponentByNode(component: EntityComponent) {
+    fun addComponentByNode(component: EntityComponent) {
         val s = component.getScript() as godot.api.Script
         val n = s.getGlobalName()
         if (components.containsKey(n)) {
@@ -129,21 +125,27 @@ class Entity : Node() {
         }
     }
 
-    public inline fun <reified T> removeComponent() = removeComponentByName(StringName(T::class.simpleName ?: ""))
+    fun addComponentByName(cName: StringName, component: EntityComponent) {
+        components[cName] = component
+    }
+
+    inline fun <reified T> removeComponent() = removeComponentByName(StringName(T::class.simpleName ?: ""))
 
     @Register
-    public fun removeComponentByType(script: godot.api.Script) = removeComponentByName(script.getGlobalName())
+    fun removeComponentByType(script: godot.api.Script) = removeComponentByName(script.getGlobalName())
 
     @Register
-    public fun removeComponentByName(n: StringName) {
+    fun removeComponentByName(n: StringName) {
         components[n]?.let { c ->
             components.remove(n)
             c.queueFree()
         }
     }
 
+    fun hasComponent(componentName: StringName): Boolean = components.containsKey(componentName)
+
     @Register
-    public fun addComponentFromInstance(
+    fun addComponentFromInstance(
         instance: EntityComponentPrototype,
         userdata: Dictionary<StringName, Any?> = Dictionary()
     ) {
@@ -155,7 +157,7 @@ class Entity : Node() {
     }
 
     @Register
-    public fun gatherSaveData(): Dictionary<StringName, Dictionary<StringName, Any?>> =
+    fun gatherSaveData(): Dictionary<StringName, Dictionary<StringName, Any?>> =
         Dictionary<StringName, Dictionary<StringName, Any?>>().also {
             components.forEach { (_, component) ->
                 component.getSaveData()?.let { data -> it[component.saveDataKey()] = data }
@@ -165,7 +167,7 @@ class Entity : Node() {
         }
 
     @Register
-    public fun applySaveData(data: Dictionary<StringName, Dictionary<StringName, Any?>>) {
+    fun applySaveData(data: Dictionary<StringName, Dictionary<StringName, Any?>>) {
         // Load entity stuff
         data["entity".asCachedStringName()].let { packet ->
             packet["tx".asCachedStringName()]?.let { tx -> tx as? Transform3D }?.let { tx3D -> transform = tx3D }
@@ -178,7 +180,7 @@ class Entity : Node() {
     }
 
     @Register
-    public fun teleport(location: Vector3, room: StringName) {
+    fun teleport(location: Vector3, room: StringName) {
         this.room = room
         position = location
     }
