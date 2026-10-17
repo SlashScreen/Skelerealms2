@@ -7,6 +7,7 @@ import godot.annotation.Visible
 import godot.core.*
 import godot.entity.EntityComponent
 import godot.entity.item.ItemComponent
+import godot.extension.connectLambda
 import godot.loot.LootTree
 
 @Script
@@ -25,36 +26,51 @@ class InventoryComponent : EntityComponent() {
     @Emit
     val currencyChanged by signal2<StringName, Int>()
 
+    /** Inventory set. */
     val inventory: MutableSet<StringName> = mutableSetOf()
+    /** Currency type -> amount. */
     val currencies: HashMap<StringName, Int> = HashMap()
+    /** Equipment for this inventory. Editor tools should keep this limited to valid slots. */
     val equipment: HashMap<StringName, StringName?> = HashMap()
 
+    /** Loot tree, used for generation. */
     private val lootTree: LootTree?
         get() = instance?.let { (it as InventoryComponentPrototype).lootTree }
 
+    /** The maximum carry weight for this inventory. */
     @Visible
     var maxCarryWeight: Float
         get() = internalMaxCarryWeight ?: instance?.let { (it as InventoryComponentPrototype).maxCarryWeight } ?: 100F
         set(value) {
             internalMaxCarryWeight = value
         }
+    /** Override max carry weight, otherise it defers to prototype. */
     private var internalMaxCarryWeight: Float? = null
 
+    /** The current sum of all item weights. */
     @Visible
     val currentCarryWeight: Float
-        get() = inventory.fold(0F) { acc, id ->
+        get() = carryWeightCache ?: inventory.fold(0F) { acc, id ->
             val en = entity?.gameWorld?.getEntity(id) ?: return acc
             val ic = en.getComponent<ItemComponent>() ?: return acc
             acc + (if (ic.questItem) 0F else ic.weight) // Quest item checks, quest items are weightless
-        }
+        }.also { internalMaxCarryWeight = it }
+    /** Internal cache for carry weight to avoid calculating every access. */
+    private var carryWeightCache: Float? = null
 
     fun generate() {
         // TODO: Generate, add items to the entity gameworld
     }
 
+    // GODOT
+
+    override fun _ready() {
+        inventoryChanged.connectLambda { _, _ -> carryWeightCache = null  } // Reset carry weight cache every time it changes
+    }
+
     // ITEMS/INVENTORY
 
-    // This assumes canTakeItem is true. Don't call without checking
+    /** Add an item to the inventory. Assumes canTakeItem is true. */
     private fun addItem(id: StringName) {
         entity?.let { e ->
             val en = e.gameWorld?.getEntity(id)!!
@@ -66,20 +82,23 @@ class InventoryComponent : EntityComponent() {
         }
     }
 
+    /** Remove an item from inventory. Assumes canGiveItem. */
     private fun removeItem(id: StringName) {
         if (inventory.remove(id))
             inventoryChanged.emit(id, InventoryChangeState.Remove)
     }
 
+    /** Determine if this can take the item. */
     private fun canTakeItem(id: StringName): Boolean {
         return !inventory.contains(id) && entity?.let { e ->
             val en = e.gameWorld?.getEntity(id)!!
             val ic = en.getComponent<ItemComponent>()!!
 
-            currentCarryWeight + ic.weight <= maxCarryWeight
+            currentCarryWeight + ic.weight <= maxCarryWeight // TODO: Encumbrance?
         } ?: false
     }
 
+    /** Determine if this item can be taken. */
     private fun canGiveItem(id: StringName): Boolean =
         inventory.contains(id) && entity?.let { e ->
             val en = e.gameWorld?.getEntity(id)!!
@@ -90,19 +109,23 @@ class InventoryComponent : EntityComponent() {
 
     // CURRENCY
 
+    /** Get the amount of this currency this inventory has. */
     @Register
     fun getCurrencyAmount(id: StringName): Int = currencies[id] ?: 0
 
+    /** Set amount of this currency. */
     @Register
     fun setCurrencyAmount(id: StringName, amount: Int) {
         currencies[id] = amount
     }
 
+    /** Get a list of all currencies this inventory has. */
     @Register
     fun getAllCurrencies(): VariantArray<StringName> = currencies.keys.toVariantArray()
 
     // EQUIPMENT
 
+    /** Try to equip this item to a slot. */
     @Register
     fun tryEquip(id: StringName, slot: StringName): Boolean {
         if (!equipment.containsKey(slot)) return false
@@ -123,6 +146,7 @@ class InventoryComponent : EntityComponent() {
         return false
     }
 
+    /** Try to unequip an item. */
     @Register
     fun tryUnequip(id: StringName): Boolean {
         if (!equipment.containsValue(id)) return false
@@ -135,6 +159,7 @@ class InventoryComponent : EntityComponent() {
 
     // TRANSACTIONS
 
+    /** Try to see if this transaction can be accepted. */
     fun canAcceptTransaction(tx: InventoryTransaction): AcceptedInventoryTransaction? {
         return if (tx.valid(entity?.gameWorld ?: return null) && if (tx.to == entity?.name) {
                 // Make sure we can take the items
@@ -152,6 +177,7 @@ class InventoryComponent : EntityComponent() {
     }
 
     // Transactions are supposed to be atomic to prevent item dupe glitches
+    /** Execute an transaction. */
     fun acceptTransaction(atx: AcceptedInventoryTransaction) {
         // Okay how do we make this atomic, how do we back out without causing too much drama
         val tx = atx.getTransaction()
@@ -188,6 +214,7 @@ class InventoryComponent : EntityComponent() {
 
     override fun loadFromData(data: Dictionary<StringName, Any?>) {
         inventory.clear()
+        carryWeightCache = null
         data["inventory".asCachedStringName()]?.let { i -> inventory.addAll((i as VariantArray<StringName>)) }
         equipment.clear()
         data["equipment".asCachedStringName()]?.let { e -> equipment.putAll((e as Dictionary<StringName, StringName?>)) }

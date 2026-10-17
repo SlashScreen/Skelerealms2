@@ -12,21 +12,18 @@
 [sub_resource type="Resource" id="Resource_gff8u"]
 script = ExtResource("2_ha1yq")
 puppet_scene = ExtResource("1_g0i2x")
-metadata/_custom_type_script = "uid://b5yipdu4lgdug"
 
 [sub_resource type="Resource" id="Resource_e2cxf"]
 script = ExtResource("3_m2m8s")
 attributes = Dictionary[StringName, float]({
 &"health": 100.0
 })
-metadata/_custom_type_script = "uid://bgxybj3kmpxcu"
 
 [sub_resource type="Resource" id="Resource_rkgea"]
 script = ExtResource("4_himet")
 factions = Dictionary[StringName, int]({
 &"player": 1
 })
-metadata/_custom_type_script = "uid://u4rm6kuepxs8"
 
 [sub_resource type="Resource" id="Resource_ey6vg"]
 script = ExtResource("5_ey6vg")
@@ -36,7 +33,6 @@ metadata/_custom_type_script = "uid://d4b6ljhqlaoa8"
 [sub_resource type="Resource" id="Resource_nidow"]
 script = ExtResource("5_himet")
 loot_tree_gd = SubResource("Resource_ey6vg")
-metadata/_custom_type_script = "uid://j04stuav22pi"
 
 [sub_resource type="Resource" id="Resource_76117"]
 script = ExtResource("3_ha1yq")
