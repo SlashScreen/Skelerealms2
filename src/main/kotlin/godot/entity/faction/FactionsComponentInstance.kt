@@ -8,10 +8,9 @@ import godot.entity.EntityComponent
 import godot.entity.EntityComponentInstance
 
 @Script
-class FactionsComponentInstance: EntityComponentInstance() {
-    @Export var factions: Dictionary<StringName, Long> = Dictionary()
+class FactionsComponentInstance : EntityComponentInstance() {
+    @Export
+    var factions: Dictionary<StringName, Long> = Dictionary()
 
-    override fun constructComponent(userdata: Dictionary<StringName, Any?>): EntityComponent = FactionsComponent().apply {
-        factions.forEach { (f, i) -> setFactionRank(f, i) }
-    }
+    override fun constructComponent(userdata: Dictionary<StringName, Any?>): EntityComponent = FactionsComponent()
 }

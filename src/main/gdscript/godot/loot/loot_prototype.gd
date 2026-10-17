@@ -1,4 +1,4 @@
-class_name SKLootPrototype
+class_name LootPrototype
 extends LootTree
 
 @export var prototype: ItemPrototype

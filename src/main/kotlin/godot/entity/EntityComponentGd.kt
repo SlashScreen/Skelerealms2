@@ -1,5 +1,6 @@
 package godot.entity
 
+import godot.annotation.Script
 import godot.api.Node
 import godot.core.Dictionary
 import godot.core.StringName

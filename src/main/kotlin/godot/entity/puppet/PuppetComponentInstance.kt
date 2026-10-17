@@ -14,5 +14,5 @@ class PuppetComponentInstance : EntityComponentInstance() {
     var puppetScene: PackedScene? = null
 
     override fun constructComponent(userdata: Dictionary<StringName, Any?>): EntityComponent =
-        PuppetComponent().also { it.puppetScene = puppetScene }
+        PuppetComponent()
 }

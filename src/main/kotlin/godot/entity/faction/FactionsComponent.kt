@@ -2,27 +2,29 @@ package godot.entity.faction
 
 import godot.annotation.Register
 import godot.annotation.Script
-import godot.core.Dictionary
-import godot.core.StringName
-import godot.core.VariantArray
-import godot.core.asCachedStringName
+import godot.core.*
 import godot.entity.EntityComponent
 
 @Script
 class FactionsComponent : EntityComponent() {
-    private val factions: Dictionary<StringName, Long> = Dictionary()
+    private val factions: HashMap<StringName, Long> = HashMap()
 
     @Register
-    fun isInFaction(fName: StringName): Boolean = factions.containsKey(fName)
+    fun isInFaction(fName: StringName): Boolean =
+        factions.containsKey(fName) || (instance?.let { i -> (i as FactionsComponentInstance).factions.containsKey(fName) }
+            ?: false)
 
     @Register
-    fun getFactionRank(fName: StringName): Long = factions.get(fName, 0L)!!
+    fun getFactionRank(fName: StringName): Long =
+        factions[fName] ?: instance?.let { i -> (i as FactionsComponentInstance).factions.get(fName, null) } ?: 0L
 
     @Register
     fun setFactionRank(fName: StringName, rank: Long) = factions.put(fName, rank)
 
     @Register
-    fun getFactions(): VariantArray<StringName> = factions.keys()
+    fun getFactions(): VariantArray<StringName> = factions.keys.apply {
+        instance?.let { i -> (i as FactionsComponentInstance).factions.keys() }?.let { fs -> addAll(fs) }
+    }.toVariantArray()
 
     override fun getSaveData(): Dictionary<StringName, Any?> =
         Dictionary<StringName, Any?>().apply { factions.forEach { set(it.key, it.value) } }

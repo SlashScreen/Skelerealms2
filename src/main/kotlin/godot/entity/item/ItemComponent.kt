@@ -22,16 +22,11 @@ class ItemComponent : EntityComponent() {
         }
 
     @Visible
-    public var prototype: ItemPrototype? = null
+    public var prototype: ItemPrototype? = instance?.let { i -> (i as ItemComponentInstance).prototype }
 
     @Visible
     public val inInventory: Boolean
         get() = inventory != null
-
-    @Register
-    public fun buildFromInstance(res: ItemComponentInstance) {
-        prototype = res.prototype
-    }
 
     // TODO: Safeguard this
     fun addToInventory(id: StringName) {

@@ -15,8 +15,7 @@ class EntityInstance : Resource() {
     @Export
     var id: StringName = "".asCachedStringName() //(1..RANDOM_NAME_LENGTH).map { allowedChars.random() }.joinToString("").asCachedStringName()
 
-    @HintString("24/17:EntityComponentInstance,EntityComponentInstanceGD")
-    var components: VariantArray<Resource> = VariantArray()
+    @Export var prototype: EntityPrototype? = null
 
     @Export
     public var room: StringName = "".asCachedStringName()
@@ -51,12 +50,12 @@ class EntityInstance : Resource() {
         n.name = id
         n.room = room
         n.transform = transform
-        components.map { r ->
+        prototype?.components?.map { r ->
             when (r) {
                 is EntityComponentInstance -> r
                 else -> EntityComponentInstanceGd().apply { resource = r } // TODO: Validate?
             }
-        }.forEach { c -> n.addComponentFromInstance(c, userdata) }
+        }?.forEach { c -> n.addComponentFromInstance(c, userdata) }
         GD.print("Entity $id constructed!")
         return n
     }

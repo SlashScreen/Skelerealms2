@@ -13,8 +13,5 @@ class ItemComponentInstance : EntityComponentInstance() {
     @Export
     var prototype: ItemPrototype? = null
 
-    override fun constructComponent(userdata: Dictionary<StringName, Any?>): EntityComponent {
-        val res = this
-        return ItemComponent().apply { buildFromInstance(res) }
-    }
+    override fun constructComponent(userdata: Dictionary<StringName, Any?>): EntityComponent = ItemComponent()
 }

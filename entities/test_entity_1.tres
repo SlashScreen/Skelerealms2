@@ -2,15 +2,21 @@
 
 [ext_resource type="PackedScene" uid="uid://doqtquety2ey4" path="res://puppets/test_puppet.tscn" id="1_3bfjs"]
 [ext_resource type="Script" uid="uid://b7m88jepq2tfm" path="res://src/main/kotlin/godot/entity/EntityInstance.kt" id="2_3bfjs"]
+[ext_resource type="Script" uid="uid://cb847yisc0cal" path="res://src/main/kotlin/godot/entity/EntityPrototype.kt" id="3_17sp5"]
 [ext_resource type="Script" uid="uid://b5yipdu4lgdug" path="res://src/main/kotlin/godot/entity/puppet/PuppetComponentInstance.kt" id="3_bvjey"]
 
-[sub_resource type="Resource" id="Resource_2o14w"]
+[sub_resource type="Resource" id="Resource_df0ig"]
 script = ExtResource("3_bvjey")
 puppet_scene = ExtResource("1_3bfjs")
 metadata/_custom_type_script = "uid://b5yipdu4lgdug"
 
+[sub_resource type="Resource" id="Resource_r0oot"]
+script = ExtResource("3_17sp5")
+components = Array[Resource]([SubResource("Resource_df0ig")])
+metadata/_custom_type_script = "uid://cb847yisc0cal"
+
 [resource]
 script = ExtResource("2_3bfjs")
 id = &"sdffsdf"
-components = Array[Resource]([SubResource("Resource_2o14w")])
+prototype = SubResource("Resource_r0oot")
 metadata/_custom_type_script = "uid://b7m88jepq2tfm"

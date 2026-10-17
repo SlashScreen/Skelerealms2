@@ -3,6 +3,8 @@ class_name EntityComponentGD
 extends Node
 
 
+var instance: EntityComponentInstanceGD
+
 @abstract func get_save_data_key() -> StringName
 
 @abstract func get_save_data() -> Dictionary

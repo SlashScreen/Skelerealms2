@@ -14,7 +14,7 @@ class InventoryComponent : EntityComponent() {
     val currencies: HashMap<StringName, Int> = HashMap()
     val equipment: HashMap<StringName, StringName?> = HashMap()
 
-    var lootTree: LootTree? = null
+    var lootTree: LootTree? = instance?.let { i -> (i as InventoryComponentInstance).lootTree }
 
     @Visible
     var maxCarryWeight: Float = 100f // TODO: Allow this to change and stuff
@@ -69,7 +69,7 @@ class InventoryComponent : EntityComponent() {
     // Transactions are supposed to be atomic to prevent item dupe glitches
     fun acceptTransaction(atx: AcceptedInventoryTransaction) {
         // Okay how do we make this atomic, how do we back out without causing too much drama
-        val tx = atx.getTx()
+        val tx = atx.getTransaction()
 
         if (tx.to == entity?.name) { // Give to
             tx.items?.let { items ->
@@ -104,10 +104,10 @@ class InventoryComponent : EntityComponent() {
     // I don't know if it works.
 
     sealed interface AcceptedInventoryTransaction {
-        fun getTx(): InventoryTransaction
+        fun getTransaction(): InventoryTransaction
     }
 
     internal class AcceptedTx(val tx: InventoryTransaction) : AcceptedInventoryTransaction {
-        override fun getTx(): InventoryTransaction = tx
+        override fun getTransaction(): InventoryTransaction = tx
     }
 }

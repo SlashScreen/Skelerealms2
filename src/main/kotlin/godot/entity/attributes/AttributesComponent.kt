@@ -1,5 +1,6 @@
 package godot.entity.attributes
 
+import godot.annotation.Register
 import godot.annotation.Script
 import godot.annotation.Visible
 import godot.core.Dictionary
@@ -9,8 +10,24 @@ import godot.entity.EntityComponent
 
 @Script
 class AttributesComponent : EntityComponent() {
+    private val attributes = Dictionary<StringName, Float>()
+
     @Visible
-    val attributes: Dictionary<StringName, Float> = Dictionary()
+    val allAttributes: Dictionary<StringName, Float>
+        get() = instance?.let { i ->
+            attributes.duplicate(false).apply { merge((i as AttributesComponentInstance).attributes) }
+        } ?: attributes
+
+    @Register
+    fun setAttribute(aName: StringName, value: Float) {
+        attributes[aName] = value
+    }
+
+    @Register
+    fun getAttribute(aName: StringName): Float =
+        attributes.getOrDefault(aName, null)
+            ?: instance?.let { i -> (i as AttributesComponentInstance).attributes.getOrDefault(aName, null) }
+            ?: 0F
 
     override fun getSaveData(): Dictionary<StringName, Any?> =
         Dictionary<StringName, Any?>().apply { attributes.forEach { (name, value) -> set(name, value) } }

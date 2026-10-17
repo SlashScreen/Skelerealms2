@@ -148,6 +148,7 @@ class Entity : Node() {
         userdata: Dictionary<StringName, Any?> = Dictionary()
     ) {
         val n = instance.constructComponent(userdata)
+        n.instance = instance
         val cName = (n.getScript() as godot.api.Script).getGlobalName()
         n.name = cName
         addComponentByNode(n) // gets name twice, but...

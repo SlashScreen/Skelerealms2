@@ -10,10 +10,8 @@ import godot.entity.EntityComponentInstance
 @Script
 class AttributesComponentInstance : EntityComponentInstance() {
     @Export
-    val attributes: Dictionary<StringName, Float> = Dictionary()
+    var attributes: Dictionary<StringName, Float> = Dictionary()
 
     override fun constructComponent(userdata: Dictionary<StringName, Any?>): EntityComponent =
-        AttributesComponent().also {
-            it.attributes.merge(attributes.duplicate(false))
-        }
+        AttributesComponent()
 }
