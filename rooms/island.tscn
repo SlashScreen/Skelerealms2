@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://cr34s4ti3f38l" path="res://assets/environment/sky.png" id="1_rmhow"]
 [ext_resource type="Terrain3DAssets" uid="uid://ypcgr3h6ajxv" path="res://terrain_resources/island/assets.res" id="2_e2cxf"]
 [ext_resource type="Terrain3DMaterial" uid="uid://cxe7lkg646cj2" path="res://terrain_resources/island/material.res" id="2_rkgea"]
-[ext_resource type="Script" uid="uid://bqo1htyk1nm71" path="res://src/main/kotlin/godot/world/EntityMarker.kt" id="5_b6g2s"]
+[ext_resource type="Script" uid="uid://cnmnoegaj2dg8" path="res://src/main/gdscript/godot/tool/entity_marker.gd" id="5_rkgea"]
 [ext_resource type="Resource" uid="uid://bh2ya6leyt6dn" path="res://entities/test_item_1.tres" id="6_w1u2n"]
 [ext_resource type="Texture2D" uid="uid://d0pirn4ef5q4p" path="res://addons/godot-prototype-texture/PNG/checker_512x512/checker_black_512x512.png" id="12_42miw"]
 
@@ -78,8 +78,8 @@ size = Vector3(7, 9, 11)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.5, 2.6, -25)
 size = Vector3(2, 5, 3)
 
-[node name="EntityMarker" type="Marker3D" parent="." unique_id=682361385]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -103.82333, 4.8894634, 67.75659)
-script = ExtResource("5_b6g2s")
+[node name="EntityMarker" type="Marker3D" parent="." unique_id=1623448272]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -103.43017, 7.493885, 67.64401)
+script = ExtResource("5_rkgea")
 instance = ExtResource("6_w1u2n")
-metadata/_custom_type_script = "uid://bqo1htyk1nm71"
+metadata/_custom_type_script = "uid://cnmnoegaj2dg8"

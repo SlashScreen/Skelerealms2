@@ -20,7 +20,7 @@ class ItemComponentPrototype : EntityComponentPrototype() {
     var model: PackedScene? = null
 
     @Export
-    var baseCurrency: StringName = StringName("")
+    var baseCurrency: StringName = "".asCachedStringName()
 
     @Export
     var baseCost: Int = 0

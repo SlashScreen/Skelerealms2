@@ -2,6 +2,7 @@ package godot.entity
 
 import godot.annotation.HintString
 import godot.annotation.Script
+import godot.annotation.Tool
 import godot.api.Resource
 import godot.core.VariantArray
 

@@ -9,5 +9,5 @@ import godot.core.StringName
 
 @Script
 class SaveGame: Resource() {
-    @Storage var data: Dictionary<StringName, Dictionary<StringName, Dictionary<StringName, Any?>>>? = null
+    @Storage var data: Dictionary<StringName, Dictionary<StringName, Dictionary<StringName, Any?>>> = Dictionary()
 }

@@ -3,6 +3,7 @@ package godot.entity
 import godot.annotation.Export
 import godot.annotation.Register
 import godot.annotation.Script
+import godot.annotation.Tool
 import godot.annotation.Visible
 import godot.api.Resource
 import godot.core.*

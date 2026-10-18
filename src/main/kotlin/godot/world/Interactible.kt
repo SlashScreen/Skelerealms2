@@ -6,6 +6,7 @@ import godot.api.Node
 import godot.core.StringName
 import godot.core.asCachedStringName
 import godot.core.signal1
+import godot.global.GD
 
 @Script
 class Interactible : Area3D() {
@@ -20,19 +21,21 @@ class Interactible : Area3D() {
         get() = tr(verbTranslationKey)
 
     @Export
-    var customTranslationKey: StringName? = null // set by item or whatever
+    var customTranslationKey: StringName = "".asCachedStringName() // set by item or whatever
 
     @Export
     var inheritNameFrom: Node? = null // TODO: Figure out some item thing
 
     @Visible
     val translatedName: String
-        get() = customTranslationKey?.let { tr(it) }
+        get() = customTranslationKey.let{ if (it == "".asCachedStringName()) null else it}
+            ?.let { tr(it) }
             ?: inheritNameFrom?.let { tr(it.name) }
             ?: "UNKNOWN"
 
     @Register
     fun interact(who: StringName) {
+        GD.print("interacting with $who")
         interacted.emit(who)
     }
 }

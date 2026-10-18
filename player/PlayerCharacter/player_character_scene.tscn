@@ -133,6 +133,12 @@ fov = 90.0
 near = 0.01
 far = 1000.0
 
+[node name="InteractCast" type="RayCast3D" parent="CameraHolder/Camera" unique_id=1194924317]
+unique_name_in_owner = true
+target_position = Vector3(0, 0, -2)
+collision_mask = 3
+collide_with_areas = true
+
 [node name="CameraBasedRaycasts" type="Node3D" parent="CameraHolder/Camera" unique_id=1510309957]
 
 [node name="LeftWallCheck" type="RayCast3D" parent="CameraHolder/Camera/CameraBasedRaycasts" unique_id=471090830]
@@ -187,9 +193,10 @@ exclude_parent = false
 target_position = Vector3(0, -3, 0)
 debug_shape_custom_color = Color(0, 0.823529, 0.956863, 1)
 
-[node name="HUD" type="CanvasLayer" parent="." unique_id=2075974170 node_paths=PackedStringArray("play_char")]
+[node name="HUD" type="CanvasLayer" parent="." unique_id=2075974170 node_paths=PackedStringArray("play_char", "play_camera")]
 script = ExtResource("16_5jm78")
 play_char = NodePath("..")
+play_camera = NodePath("../CameraHolder")
 metadata/_edit_use_anchors_ = true
 
 [node name="SpeedLinesContainer" type="ColorRect" parent="HUD" unique_id=1013896058]
@@ -589,5 +596,19 @@ theme_override_font_sizes/font_size = 40
 text = "....."
 label_settings = ExtResource("14_gfbru")
 vertical_alignment = 1
+
+[node name="InteractiveText" type="Label" parent="HUD" unique_id=976306137]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_alignment = 1
 
 [connection signal="change_fov" from="StateMachine" to="CameraHolder" method="change_fov"]
