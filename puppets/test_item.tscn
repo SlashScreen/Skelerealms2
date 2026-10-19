@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://dinq6eyweohn"]
 
+[ext_resource type="Script" uid="uid://biq8p5fu3bdi5" path="res://src/main/gdscript/godot/world/item_root.gd" id="1_heg6r"]
 [ext_resource type="Script" uid="uid://knfuwkeiq1pd" path="res://src/main/kotlin/godot/world/Interactible.kt" id="1_p81d3"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_6mfa5"]
@@ -10,6 +11,7 @@ size = Vector3(1.5, 1.5, 1.5)
 [node name="RigidBody3D" type="RigidBody3D" unique_id=965347843]
 collision_layer = 4
 collision_mask = 5
+script = ExtResource("1_heg6r")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1308066494]
 shape = SubResource("BoxShape3D_6mfa5")
@@ -26,3 +28,5 @@ shape = SubResource("BoxShape3D_6mfa5")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=2134340299]
 mesh = SubResource("BoxMesh_6mfa5")
+
+[connection signal="interacted" from="Interactible" to="." method="_on_interactible_interacted"]

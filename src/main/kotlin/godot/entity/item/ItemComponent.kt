@@ -20,31 +20,31 @@ class ItemComponent : EntityComponent() {
 
     @Visible
     val model: PackedScene?
-        get() = instance?.let { (it as ItemComponentPrototype).model }
+        get() = prototype?.let { (it as ItemComponentPrototype).model }
 
     @Visible
     val baseCurrency: StringName
-        get() = instance?.let { (it as ItemComponentPrototype).baseCurrency } ?: StringName("")
+        get() = prototype?.let { (it as ItemComponentPrototype).baseCurrency } ?: StringName("")
 
     @Visible
     val baseCost: Int
-        get() = instance?.let { (it as ItemComponentPrototype).baseCost } ?: 0
+        get() = prototype?.let { (it as ItemComponentPrototype).baseCost } ?: 0
 
     @Visible
     val weight: Float
-        get() = instance?.let { (it as ItemComponentPrototype).weight } ?: 0F
+        get() = prototype?.let { (it as ItemComponentPrototype).weight } ?: 0F
 
     @Visible
     val questItem: Boolean
-        get() = internalQuestItem ?: instance?.let { (it as ItemComponentPrototype).questItem } ?: false
+        get() = internalQuestItem ?: prototype?.let { (it as ItemComponentPrototype).questItem } ?: false
 
     @Visible
     val equipmentSlots: VariantArray<StringName>
-        get() = instance?.let { (it as ItemComponentPrototype).equipmentSlots } ?: VariantArray()
+        get() = prototype?.let { (it as ItemComponentPrototype).equipmentSlots } ?: VariantArray()
 
     val equipmentSlotsSet: Set<StringName>
         get() = internalEquipmentSlots
-            ?: instance?.let { (it as ItemComponentPrototype).equipmentSlots.toSet() }
+            ?: prototype?.let { (it as ItemComponentPrototype).equipmentSlots.toSet() }
                 .also { internalEquipmentSlots = it }
             ?: emptySet()
 
@@ -59,12 +59,17 @@ class ItemComponent : EntityComponent() {
 
     // TODO: Safeguard this
     fun addToInventory(id: StringName) {
-        inventory = id
+        log("adding to inventory: $id")
+        containedInventory = id
+        entity?.room = id
+        // TODO: Change room or something
     }
+
+    // TODO: Remove from inventory, drop
 
     @Register
     fun hasTag(tag: StringName): Boolean =
-        tags.contains(tag) || instance?.let { (it as ItemComponentPrototype).tagsSet.contains(tag) } ?: false
+        tags.contains(tag) || prototype?.let { (it as ItemComponentPrototype).tagsSet.contains(tag) } ?: false
 
     @Register
     fun addTag(tag: StringName) {
@@ -72,7 +77,7 @@ class ItemComponent : EntityComponent() {
     }
 
     @Register
-    fun translatedItemName(): String = tr(instance?.let { (it as ItemComponentPrototype).itemName } ?: entity?.name ?: "".asCachedStringName())
+    fun translatedItemName(): String = tr(prototype?.let { (it as ItemComponentPrototype).itemName } ?: entity?.name ?: "".asCachedStringName())
 
     @Register
     override fun saveDataKey(): StringName = "itemComponent".asCachedStringName()

@@ -21,7 +21,7 @@ class PuppetComponent : EntityComponent() {
     }
 
     private val puppetScene: PackedScene?
-        get() = instance?.let { (it as PuppetComponentPrototype).puppetScene }
+        get() = prototype?.let { (it as PuppetComponentPrototype).puppetScene }
     private var puppet: Node3D? = null
     var controlMode: ControlMode = ControlMode.PuppetControl // TODO: Change this
 
@@ -48,19 +48,20 @@ class PuppetComponent : EntityComponent() {
     }
 
     private fun spawnPuppet() {
-        GD.print("spawn puppet")
+        log("spawning puppet")
         if (puppet != null) return
         puppetScene?.let { scene ->
             val ps = scene.instantiate() as Node3D
             addChild(ps)
             puppet = ps
             ps.globalTransform = entity?.transform ?: Transform3D.IDENTITY
+            ps.set("puppet_component".asCachedStringName(), this)
             entity?.let { ps.name = it.name } // TODO: Figure out something for the generic item names
         } ?: GD.pushError("Puppet scene not found!")
     }
 
     private fun destroyPuppet() {
-        GD.print("destroy puppet")
+        log("destroying puppet")
         puppet?.queueFree()
         puppet = null
     }

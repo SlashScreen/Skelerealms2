@@ -1,11 +1,13 @@
 package godot.entity
 
 import godot.annotation.Export
+import godot.annotation.Script
 import godot.annotation.Visible
 import godot.api.Node
 import godot.core.Dictionary
 import godot.core.StringName
 
+@Script
 abstract class EntityComponent : Node() {
     /** The parent entity. */
     @Visible
@@ -18,10 +20,14 @@ abstract class EntityComponent : Node() {
 
     /** The backing instance for this component. */
     @Export
-    var instance: EntityComponentPrototype? = null
+    var prototype: EntityComponentPrototype? = null
 
     /** Does this component handle this blob? */
     fun handlesSaveData(key: StringName): Boolean = key == saveDataKey()
+
+    fun log(msg: String) {
+        entity?.log("($name) $msg")
+    }
 
     /** What key in the save data blob should be given to this component. */
     abstract fun saveDataKey(): StringName

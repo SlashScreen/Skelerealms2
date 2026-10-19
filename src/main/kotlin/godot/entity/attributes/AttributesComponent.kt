@@ -13,13 +13,13 @@ class AttributesComponent : EntityComponent() {
 
     @Visible
     val allAttributes: Dictionary<StringName, Float>
-        get() = instance?.let {
+        get() = prototype?.let {
             attributes.duplicate(false).apply { merge((it as AttributesComponentPrototype).attributes) }
         } ?: attributes
 
     @Visible
     val allPerks: VariantArray<StringName>
-        get() = instance?.let { perks.toVariantArray().apply { addAll((it as AttributesComponentPrototype).perks) } }
+        get() = prototype?.let { perks.toVariantArray().apply { addAll((it as AttributesComponentPrototype).perks) } }
             ?: perks.toVariantArray()
 
     @Register
@@ -30,7 +30,7 @@ class AttributesComponent : EntityComponent() {
     @Register
     fun getAttribute(aName: StringName, default: Float = 0f): Float =
         attributes.getOrDefault(aName, null)
-            ?: instance?.let { (it as AttributesComponentPrototype).attributes.getOrDefault(aName, null) }
+            ?: prototype?.let { (it as AttributesComponentPrototype).attributes.getOrDefault(aName, null) }
             ?: default
 
     @Register
@@ -40,7 +40,7 @@ class AttributesComponent : EntityComponent() {
 
     @Register
     fun hasPerk(perk: StringName): Boolean =
-        perks.contains(perk) || (instance?.let { (it as AttributesComponentPrototype).perks.has(perk) } ?: false)
+        perks.contains(perk) || (prototype?.let { (it as AttributesComponentPrototype).perks.has(perk) } ?: false)
 
     override fun getSaveData(): Dictionary<StringName, Any?> =
         dictionaryOf(

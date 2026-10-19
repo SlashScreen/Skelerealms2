@@ -29,7 +29,6 @@ class Entity : Node() {
     var simState: SimState = SimState.NONE
         set(value) {
             if (field == value) return
-            GD.print("$name: set sim state: $value")
 
             field = value
             simStateChanged.emit(simState)
@@ -39,7 +38,6 @@ class Entity : Node() {
     var room: StringName = "".asCachedStringName()
         set(value) {
             if (field == value) return
-            GD.print("$name: set room to $value")
 
             field = value
             roomChanged.emit(value)
@@ -145,15 +143,23 @@ class Entity : Node() {
     fun hasComponent(componentName: StringName): Boolean = components.containsKey(componentName)
 
     @Register
-    fun addComponentFromInstance(
-        instance: EntityComponentPrototype,
+    fun addComponentFromPrototype(
+        prototype: EntityComponentPrototype,
         userdata: Dictionary<StringName, Any?> = Dictionary()
     ) {
-        val n = instance.constructComponent(userdata)
-        n.instance = instance
+        val n = prototype.constructComponent(userdata)
+        n.prototype = prototype
         val cName = (n.getScript() as godot.api.Script).getGlobalName()
+        log("add component $cName")
         n.name = cName
-        addComponentByNode(n) // gets name twice, but...
+
+        if (components.containsKey(cName)) {
+            GD.pushWarning("Attempted to add a component twice: $n")
+        } else {
+            components[cName] = n
+            addChild(n)
+            n.entity = this
+        }
     }
 
     @Register
@@ -183,5 +189,9 @@ class Entity : Node() {
     fun teleport(location: Vector3, room: StringName) {
         this.room = room
         position = location
+    }
+
+    fun log(msg: String) {
+        GD.print("$name: $msg")
     }
 }

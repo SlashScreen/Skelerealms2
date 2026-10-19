@@ -35,12 +35,12 @@ class InventoryComponent : EntityComponent() {
 
     /** Loot tree, used for generation. */
     private val lootTree: LootTree?
-        get() = instance?.let { (it as InventoryComponentPrototype).lootTree }
+        get() = prototype?.let { (it as InventoryComponentPrototype).lootTree }
 
     /** The maximum carry weight for this inventory. */
     @Visible
     var maxCarryWeight: Float
-        get() = internalMaxCarryWeight ?: instance?.let { (it as InventoryComponentPrototype).maxCarryWeight } ?: 100F
+        get() = internalMaxCarryWeight ?: prototype?.let { (it as InventoryComponentPrototype).maxCarryWeight } ?: 100F
         set(value) {
             internalMaxCarryWeight = value
         }
@@ -54,7 +54,7 @@ class InventoryComponent : EntityComponent() {
             val en = entity?.gameWorld?.getEntity(id) ?: return acc
             val ic = en.getComponent<ItemComponent>() ?: return acc
             acc + (if (ic.questItem) 0F else ic.weight) // Quest item checks, quest items are weightless
-        }.also { internalMaxCarryWeight = it }
+        }.also { carryWeightCache = it }
     /** Internal cache for carry weight to avoid calculating every access. */
     private var carryWeightCache: Float? = null
 
@@ -90,10 +90,10 @@ class InventoryComponent : EntityComponent() {
 
     /** Determine if this can take the item. */
     private fun canTakeItem(id: StringName): Boolean {
-        return !inventory.contains(id) && entity?.let { e ->
+        return (!inventory.contains(id)) && entity?.let { e ->
             val en = e.gameWorld?.getEntity(id)!!
             val ic = en.getComponent<ItemComponent>()!!
-
+            log("checking weight: ${currentCarryWeight + ic.weight} <= $maxCarryWeight")
             currentCarryWeight + ic.weight <= maxCarryWeight // TODO: Encumbrance?
         } ?: false
     }
@@ -159,14 +159,21 @@ class InventoryComponent : EntityComponent() {
 
     // TRANSACTIONS
 
+    @Register
+    fun tryApplyTransaction(tx: InventoryTransaction): Boolean {
+        val accepted = canAcceptTransaction(tx) ?: return false
+        acceptTransaction(accepted)
+        return true
+    }
+
     /** Try to see if this transaction can be accepted. */
     fun canAcceptTransaction(tx: InventoryTransaction): AcceptedInventoryTransaction? {
         return if (tx.valid(entity?.gameWorld ?: return null) && if (tx.to == entity?.name) {
                 // Make sure we can take the items
-                tx.items?.let { items -> items.all { id -> canTakeItem(id) } } ?: true
+                tx.items?.let { items -> items.all { id -> canTakeItem(id) }.also { log("can take all items: $it") } } ?: true
             } else { // Take transaction from
                 // Make sure we have the items and can give them
-                (tx.items?.let { items -> items.all { id -> canGiveItem(id) } } ?: true)
+                (tx.items?.let { items -> items.all { id -> canGiveItem(id).also { log("can give all items: $it") } } } ?: true)
                         // Make sure we have all the currencies necessary
                         && tx.currencies?.let { c ->
                     c.all { (name, delta) -> currencies.getOrDefault(name, 0) >= delta }

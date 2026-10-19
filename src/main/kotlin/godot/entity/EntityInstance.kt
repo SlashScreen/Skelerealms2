@@ -3,7 +3,6 @@ package godot.entity
 import godot.annotation.Export
 import godot.annotation.Register
 import godot.annotation.Script
-import godot.annotation.Tool
 import godot.annotation.Visible
 import godot.api.Resource
 import godot.core.*
@@ -55,7 +54,7 @@ class EntityInstance : Resource() {
                 is EntityComponentPrototype -> r
                 else -> EntityComponentPrototypeGd().apply { resource = r } // TODO: Validate?
             }
-        }?.forEach { c -> n.addComponentFromInstance(c, userdata) }
+        }?.forEach { c -> n.addComponentFromPrototype(c, userdata) }
         GD.print("Entity $id constructed!")
         return n
     }

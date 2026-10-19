@@ -15,3 +15,23 @@
   - [ ] Town
   - [ ] Dungeon
   - [ ] Encounter
+- [X] Inventory
+- [X] Pick up items
+- [ ] Tools
+  - [X] Entity world placement
+  - [ ] Entity sync
+  - [ ] Door stuff
+  - [ ] Navmesh stuff
+- [X] Better mutable-immutable relationship
+- [ ] Factions
+  - [X] Membership
+  - [ ] Opinions
+- [X] Puppet
+- [ ] Puppet control switch
+- [ ] Docs
+- [X] GDScript Integration testing
+- [ ] Doors
+  - [ ] Teleport
+- [ ] Savegame
+  - [ ] Finish
+  - [ ] Test
