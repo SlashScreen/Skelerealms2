@@ -88,7 +88,7 @@ class GameWorld : Node() {
     fun createSaveGame(): SaveGame = SaveGame().apply { data = gatherSaveData() }
 
     @Register
-    fun applySaveGame(saveData: SaveGame) = applySaveData(saveData.data ?: dictionaryOf())
+    fun applySaveGame(saveData: SaveGame) = applySaveData(saveData.data)
 
     @Register
     fun loadAllEntities(userdata: Dictionary<StringName, Any?> = Dictionary()) {

@@ -90,6 +90,10 @@ config/icon="res://icon.svg"
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
+[dotnet]
+
+project/assembly_name="sk-kt"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/GDQuest_GDScript_formatter/plugin.cfg", "res://addons/godot_sandbox/plugin.cfg", "res://addons/gut/plugin.cfg", "res://addons/sk2editortools/plugin.cfg", "res://addons/terrain_3d/plugin.cfg", "res://addons/vertex_studio/plugin.cfg")

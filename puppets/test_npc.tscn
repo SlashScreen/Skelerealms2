@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://po2k4juvgepb"]
+
+[ext_resource type="Script" uid="uid://b3kxw67c38k7s" path="res://src/main/gdscript/godot/npcs/test_npc.gd" id="1_oisy3"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_kuklq"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_862q8"]
+
+[node name="CharacterBody3D" type="CharacterBody3D" unique_id=130525931 node_paths=PackedStringArray("agent")]
+collision_layer = 6
+collision_mask = 5
+script = ExtResource("1_oisy3")
+agent = NodePath("NavigationAgent3D")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=2057223090]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_kuklq")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1071559351]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_862q8")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="." unique_id=1561404984]
+avoidance_enabled = true
+debug_enabled = true
