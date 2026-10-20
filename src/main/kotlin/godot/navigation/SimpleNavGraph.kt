@@ -32,30 +32,34 @@ class SimpleNavGraph : Resource() {
             indexBuffer.resize(mesh.getPolygonCount() * 3) // TODO: do not hardcode this?
 
             // Collect polygon indices into one buffer
-            (0..mesh.getPolygonCount()).forEach { i ->
+            (0 until mesh.getPolygonCount()).forEach { i ->
                 mesh.getPolygon(i).forEachIndexed { idx, x ->
                     indexBuffer[i + idx] = x
                 }
             }
 
             // Create our first surface array
-            val surfaceArr = VariantArray<Any?>()
-            surfaceArr.resize(Mesh.ArrayType.MAX.ordinal)
-            surfaceArr[Mesh.ArrayType.VERTEX.ordinal] = vertexBuffer
-            surfaceArr[Mesh.ArrayType.INDEX.ordinal] = indexBuffer
+            val surfaceArr = VariantArray<Any?>().apply {
+                resize(Mesh.ArrayType.MAX.ordinal)
+                set(Mesh.ArrayType.VERTEX.ordinal, vertexBuffer)
+                set(Mesh.ArrayType.INDEX.ordinal, indexBuffer)
+            }
 
             // Use the importer to create a LOD to simplify our mesh for us
             // Because god knows I ain't doin that myself
-            val im = ImporterMesh().apply { addSurface(Mesh.PrimitiveType.TRIANGLES, surfaceArr) }
-            im.generateLods(20.0F, 0.0F, variantArrayOf())
+            val im = ImporterMesh().apply {
+                addSurface(Mesh.PrimitiveType.TRIANGLES, surfaceArr)
+                generateLods(20.0F, 0.0F, variantArrayOf())
+            }
             val lodIdxBuffer = im.getSurfaceLodIndices(0, im.getSurfaceLodCount(0) - 1)
 
-            // The LOD is just an index buffer using the same vtx data,
+            // The LOD is just an index buffer using the same vtx data
             // so we just pass in the same vertex buffer with the new index buffer
-            val lodArr = VariantArray<Any?>()
-            lodArr.resize(Mesh.ArrayType.MAX.ordinal)
-            lodArr[Mesh.ArrayType.VERTEX.ordinal] = vertexBuffer
-            lodArr[Mesh.ArrayType.INDEX.ordinal] = lodIdxBuffer
+            val lodArr = VariantArray<Any?>().apply {
+                resize(Mesh.ArrayType.MAX.ordinal)
+                set(Mesh.ArrayType.VERTEX.ordinal, vertexBuffer)
+                set(Mesh.ArrayType.INDEX.ordinal, lodIdxBuffer)
+            }
 
             return ArrayMesh().apply { addSurfaceFromArrays(Mesh.PrimitiveType.TRIANGLES, lodArr) }
         }
@@ -71,31 +75,23 @@ class SimpleNavGraph : Resource() {
             meshTool.createFromSurface(mesh, 0)
 
             // Maps to polygon index
-            val polyRange = 0..meshTool.getFaceCount()
+            val polyRange = 0.until(meshTool.getFaceCount())
+
             // Calculate barycenters of each polygon
             val barycenters = polyRange.map { i ->
-                val a = meshTool.getVertex(meshTool.getFaceVertex(i, 0))
-                val b = meshTool.getVertex(meshTool.getFaceVertex(i, 1))
-                val c = meshTool.getVertex(meshTool.getFaceVertex(i, 2))
-
-                (a + b + c) / 3.0
+                0.until(3) // vertex indices
+                    .map { meshTool.getVertex(meshTool.getFaceVertex(i, it)) } // Get vertex point from index
+                    .reduce { accum, next -> accum + next } // Sum
+                    .div(3.0) // Divide into average
             }
 
             // Collect a list of neighbors for each polygon
             val neighbors = polyRange.map { i ->
-                val eA = meshTool.getFaceEdge(i, 0)
-                val eB = meshTool.getFaceEdge(i, 1)
-                val eC = meshTool.getFaceEdge(i, 2)
-
-                arrayOf(
-                    meshTool.getFaceEdge(i, 0),
-                    meshTool.getFaceEdge(i, 1),
-                    meshTool.getFaceEdge(i, 2)
-                ) // Collect all 3 edges for this poly
-                    .flatMap { e -> meshTool.getEdgeFaces(e) } // Get polys connected to those edges
-                    .filterNot { n -> n == i } // Get rid of all the ones that are this polygon
+                0.until(3) // 3 edges
+                    .map { meshTool.getFaceEdge(i, it) } // Collect all 3 edges for this poly
+                    .flatMap { meshTool.getEdgeFaces(it) } // Get polys connected to those edges into a flat array
+                    .filterNot { it == i } // Get rid of all the ones that are this polygon
             }
-
 
             // Add bidirectional connections to a set, so each is unique
             val connectedSet: MutableSet<UnorderedPair<Int, Int>> = mutableSetOf()
@@ -105,8 +101,8 @@ class SimpleNavGraph : Resource() {
 
             // Flatten to indices, return navgraph
             return SimpleNavGraph().apply {
-                this.points = PackedVector3Array(barycenters)
-                this.connections = PackedInt32Array(connectedSet.flatMap { p -> listOf(p.first, p.second) })
+                points = PackedVector3Array(barycenters)
+                connections = PackedInt32Array(connectedSet.flatMap { p -> listOf(p.first, p.second) })
             }
         }
 
