@@ -3,12 +3,12 @@
 - [ ] Range to camera simulation
 - [ ] Hook up GOAP
 - [ ] Navigation
-  - [ ] Portals
-  - [ ] Precompile?
-  - [ ] Navmesh?
+  - [X] Portals
+  - [X] Precompile?
+  - [X] Navmesh?
   - [ ] Agent
-  - [ ] A*
-  - [ ] Room-based cache
+  - [X] A*
+  - [X] Room-based cache
   - [ ] Door locking
 - [ ] Island
   - [X] Block out

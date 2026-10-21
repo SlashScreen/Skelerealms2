@@ -1,14 +1,10 @@
+package godot.navigation
+
 import godot.annotation.Emit
 import godot.annotation.Register
 import godot.annotation.Script
 import godot.annotation.Visible
-import godot.core.Dictionary
-import godot.core.StringName
-import godot.core.Vector3
-import godot.core.asCachedStringName
-import godot.core.dictionaryOf
-import godot.core.signal1
-import godot.core.signal2
+import godot.core.*
 import godot.entity.EntityComponent
 import godot.global.GD
 

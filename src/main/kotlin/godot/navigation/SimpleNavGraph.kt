@@ -2,28 +2,33 @@ package godot.navigation
 
 import godot.annotation.Export
 import godot.annotation.Script
-import godot.api.ArrayMesh
-import godot.api.ImporterMesh
-import godot.api.Mesh
-import godot.api.MeshDataTool
-import godot.api.NavigationMesh
-import godot.api.Resource
-import godot.core.*
+import godot.api.*
+import godot.core.PackedInt32Array
+import godot.core.PackedVector3Array
+import godot.core.VariantArray
+import godot.core.variantArrayOf
 import org.jgrapht.alg.util.UnorderedPair
 
 @Script
 class SimpleNavGraph : Resource() {
     @Export
-    var doorInstances: VariantArray<DoorInstance> = variantArrayOf()
-
-    @Export
-    var weights: Dictionary<StringName, Dictionary<StringName, Float>> = Dictionary()
-
-    @Export
     var points: PackedVector3Array = PackedVector3Array()
 
     @Export
     var connections: PackedInt32Array = PackedInt32Array()
+
+    fun intoAStar(): AStar3D =
+        AStar3D().apply {
+            reserveSpace(points.size.toLong())
+
+            points.forEachIndexed { idx, vec ->
+                addPoint(idx.toLong(), vec)
+            }
+
+            (0 until connections.size step 2).forEach { idx ->
+                connectPoints(connections[idx].toLong(), connections[idx + 1].toLong())
+            }
+        }
 
     companion object {
         fun createMeshFromNavmesh(mesh: NavigationMesh): ArrayMesh {

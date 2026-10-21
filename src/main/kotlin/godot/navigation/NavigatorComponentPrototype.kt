@@ -1,3 +1,5 @@
+package godot.navigation
+
 import godot.annotation.Script
 import godot.core.Dictionary
 import godot.core.StringName
