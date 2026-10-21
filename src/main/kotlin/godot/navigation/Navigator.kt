@@ -1,13 +1,21 @@
 package godot.navigation
 
+import godot.annotation.Register
+import godot.annotation.Script
 import godot.api.AStar3D
+import godot.api.Node
 import godot.core.*
 import org.jgrapht.Graph
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath
 import org.jgrapht.graph.DefaultUndirectedWeightedGraph
 import org.jgrapht.graph.DefaultWeightedEdge
+import org.jgrapht.nio.graph6.Graph6Sparse6Exporter
+import org.jgrapht.nio.graph6.Graph6Sparse6Importer
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 
-class Navigator {
+@Script
+class Navigator : Node() {
     val roomGraph: Graph<StringName, PathEdge> = DefaultUndirectedWeightedGraph(PathEdge::class.java)
     val navMaps = hashMapOf<StringName, AStar3D>()
     val cache = hashMapOf<Pair<StringName, StringName>, List<PathStep>>()
@@ -84,7 +92,8 @@ class Navigator {
         return steps
     }
 
-    fun findPathGD(
+    @Register
+    fun findPathBetweenRooms(
         roomA: StringName,
         posA: Vector3,
         roomB: StringName,
@@ -110,6 +119,11 @@ class Navigator {
                 }
             }
         }.toVariantArray()
+    }
+
+    @Register
+    fun loadRoomAStar(roomName: StringName, mesh: SimpleNavGraph) {
+        navMaps[roomName] = mesh.intoAStar()
     }
 
     // TODO: support chunks?
@@ -157,6 +171,24 @@ class Navigator {
                 )
             }
         }
+    }
+
+    @Register
+    fun serializeGraph(): PackedByteArray {
+        val g6 = Graph6Sparse6Exporter<StringName, PathEdge>(Graph6Sparse6Exporter.Format.SPARSE6)
+        val writer = ByteArrayOutputStream()
+
+        g6.exportGraph(roomGraph, writer)
+
+        return writer.toByteArray().toPackedByteArray()
+    }
+
+    @Register
+    fun deserializeGraph(buffer: PackedByteArray) {
+        val g6 = Graph6Sparse6Importer<StringName, PathEdge>()
+        val reader = ByteArrayInputStream(buffer.toByteArray())
+
+        g6.importGraph(roomGraph, reader)
     }
 
     class PathEdge(

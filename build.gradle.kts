@@ -17,4 +17,5 @@ godot {
 
 dependencies {
     implementation("org.jgrapht:jgrapht-core:1.5.3")
+    implementation("org.jgrapht:jgrapht-io:1.5.3")
 }
