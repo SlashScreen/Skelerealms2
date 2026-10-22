@@ -20,6 +20,10 @@ class Navigator : Node() {
     val navMaps = hashMapOf<StringName, AStar3D>()
     val cache = hashMapOf<Pair<StringName, StringName>, List<PathStep>>()
 
+    override fun _enterTree() {
+        instance = this
+    }
+
     fun invalidateCache() {
         cache.clear()
     }
@@ -89,6 +93,8 @@ class Navigator : Node() {
             steps.add(PointsPathStep(path))
         }
 
+        cache[Pair(a.first, b.first)] = steps
+
         return steps
     }
 
@@ -98,10 +104,10 @@ class Navigator : Node() {
         posA: Vector3,
         roomB: StringName,
         posB: Vector3
-    ): VariantArray<Dictionary<StringName, out CoreType>> {
+    ): VariantArray<Dictionary<StringName, Any?>> {
         val steps = findPath(Pair(roomA, posA), Pair(roomB, posB)) ?: return variantArrayOf()
 
-        return steps.map {
+        return steps.map<PathStep, Dictionary<StringName, Any?>> {
             when (it) {
                 is AbsoluteStep -> {
                     dictionaryOf(
@@ -150,7 +156,7 @@ class Navigator : Node() {
                 val path = astar.getPointPath(pointA, pointB)
                 if (path.isEmpty()) continue // Skip if cannot find path
 
-                // Get length (squared) of path. doesn't matter for path calculations.
+                // Get length (squared) of path. Accurate length doesn't matter for path calculations.
                 var lastVertex = path.first()
                 val pathCost = path.fold(0.0) { accum, next ->
                     (accum + lastVertex.distanceSquaredTo(next)).also {
@@ -203,4 +209,8 @@ class Navigator : Node() {
     sealed class PathStep
     class AbsoluteStep(val room: StringName, val pos: Vector3) : PathStep() // Teleport to a point
     class PointsPathStep(val path: PackedVector3Array) : PathStep() // Move along a path
+
+    companion object {
+        var instance: Navigator? = null
+    }
 }
