@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bfwa1megx55wa"]
 
-[ext_resource type="NavigationMesh" uid="uid://cvpf77u3djxd8" path="res://assets/navmeshes/todd_test.res" id="1_ytrt7"]
+[ext_resource type="NavigationMesh" uid="uid://cm6sp4cows8f1" path="res://terrain_resources/island/navmesh.res" id="1_ytrt7"]
 
 [sub_resource type="GDScript" id="GDScript_ebb26"]
 script/source = "extends Node
@@ -17,7 +17,7 @@ func _ready() -> void:
 	var baker := SimpleNavGraphBuilder.new()
 	for nv: NavigationMesh in to_convert:
 		var sn := baker.build_simple_nav_graph(nv)
-		ResourceSaver.save(sn, OUTPUT + \"%s.res\" % nv.resource_name)
+		ResourceSaver.save(sn, OUTPUT + \"graph.res\") # TODO: extract name with regex
 "
 
 [node name="Converter" type="Node" unique_id=753314981]

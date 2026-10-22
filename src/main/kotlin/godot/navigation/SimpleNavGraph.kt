@@ -11,6 +11,8 @@ import godot.core.dictionaryOf
 import godot.core.variantArrayOf
 import godot.global.GD
 import org.jgrapht.alg.util.UnorderedPair
+import kotlin.math.max
+import kotlin.math.min
 
 @Tool
 @Script
@@ -59,14 +61,16 @@ class SimpleNavGraph : Resource() {
             // Use the importer to create a LOD to simplify our mesh for us
             // Because god knows I ain't doin that myself
             val im = ImporterMesh().apply {
-                addSurface(
-                    Mesh.PrimitiveType.TRIANGLES, surfaceArr, lods = dictionaryOf(
-                        100f to PackedInt32Array().apply { resize(indexBuffer.size / 2) }
-                    )
-                )
+                addSurface(Mesh.PrimitiveType.TRIANGLES, surfaceArr)
                 generateLods(20.0F, 0.0F, variantArrayOf())
             }
-            val lodIdxBuffer = im.getSurfaceLodIndices(0, im.getSurfaceLodCount(0) - 1) // Error here?
+            // If we generated any lods, we get the simplest one.
+            // If the navmesh is super simple, it won't generate anything. I think.
+            // So we just use the existing buffer.
+            val lodIdxBuffer = if (im.getSurfaceLodCount(0) > 0) im.getSurfaceLodIndices(
+                0,
+                im.getSurfaceLodCount(0) - 1
+            ) else indexBuffer
             GD.print("Generated LODs.")
 
             // The LOD is just an index buffer using the same vtx data
