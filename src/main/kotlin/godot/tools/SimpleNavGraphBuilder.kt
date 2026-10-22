@@ -12,5 +12,5 @@ import godot.navigation.SimpleNavGraph
 @Script
 class SimpleNavGraphBuilder : RefCounted() {
     @Register
-    fun buildSimpleNavGraph(graph: NavigationMesh): SimpleNavGraph = SimpleNavGraph.createFromNavMesh(graph)
+    fun buildSimpleNavGraph(mesh: NavigationMesh): SimpleNavGraph = SimpleNavGraph.createFromNavMesh(mesh)
 }

@@ -7,6 +7,7 @@ import godot.api.*
 import godot.core.PackedInt32Array
 import godot.core.PackedVector3Array
 import godot.core.VariantArray
+import godot.core.dictionaryOf
 import godot.core.variantArrayOf
 import godot.global.GD
 import org.jgrapht.alg.util.UnorderedPair
@@ -58,7 +59,11 @@ class SimpleNavGraph : Resource() {
             // Use the importer to create a LOD to simplify our mesh for us
             // Because god knows I ain't doin that myself
             val im = ImporterMesh().apply {
-                addSurface(Mesh.PrimitiveType.TRIANGLES, surfaceArr)
+                addSurface(
+                    Mesh.PrimitiveType.TRIANGLES, surfaceArr, lods = dictionaryOf(
+                        100f to PackedInt32Array().apply { resize(indexBuffer.size / 2) }
+                    )
+                )
                 generateLods(20.0F, 0.0F, variantArrayOf())
             }
             val lodIdxBuffer = im.getSurfaceLodIndices(0, im.getSurfaceLodCount(0) - 1) // Error here?
