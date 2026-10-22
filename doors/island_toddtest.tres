@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="DoorInstance" format=3 uid="uid://b7aauckbbmxxd"]
+
+[ext_resource type="Resource" uid="uid://ddc8yc8b3o5ir" path="res://doors/toddtest_island.tres" id="1_j0807"]
+[ext_resource type="Script" uid="uid://btcwh0f8xvr2s" path="res://src/main/kotlin/godot/navigation/DoorInstance.kt" id="2_6tcok"]
+
+[resource]
+script = ExtResource("2_6tcok")
+position = Vector3(-79.97441, 4.6129823, 81.39967)
+room = &"island"
+other_side = ExtResource("1_j0807")
+metadata/_custom_type_script = "uid://btcwh0f8xvr2s"

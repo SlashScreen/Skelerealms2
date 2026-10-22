@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="DoorInstance" format=3 uid="uid://ddc8yc8b3o5ir"]
+
+[ext_resource type="Script" uid="uid://btcwh0f8xvr2s" path="res://src/main/kotlin/godot/navigation/DoorInstance.kt" id="1_b7rqg"]
+
+[resource]
+script = ExtResource("1_b7rqg")
+position = Vector3(-7, 0, 0)
+room = &"toddtest"
+metadata/_custom_type_script = "uid://btcwh0f8xvr2s"

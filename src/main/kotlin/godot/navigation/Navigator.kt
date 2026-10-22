@@ -211,6 +211,9 @@ class Navigator : Node() {
     class PointsPathStep(val path: PackedVector3Array) : PathStep() // Move along a path
 
     companion object {
+        private val DOOR_PATH = "res://doors/"
+        private val NAV_PATH = "res://navgraphs/"
+
         var instance: Navigator? = null
     }
 }

@@ -7,6 +7,8 @@
 [ext_resource type="Script" uid="uid://cnmnoegaj2dg8" path="res://src/main/gdscript/godot/tool/entity_marker.gd" id="5_rkgea"]
 [ext_resource type="Resource" uid="uid://bh2ya6leyt6dn" path="res://entities/test_item_1.tres" id="6_w1u2n"]
 [ext_resource type="Resource" uid="uid://v0h3ynvs2vl1" path="res://entities/test_npc_1.tres" id="8_uljpk"]
+[ext_resource type="Script" uid="uid://b0o7fkbjswgf4" path="res://src/main/kotlin/godot/navigation/Door.kt" id="9_winl8"]
+[ext_resource type="Resource" uid="uid://b7aauckbbmxxd" path="res://doors/island_toddtest.tres" id="10_anbg0"]
 [ext_resource type="Texture2D" uid="uid://d0pirn4ef5q4p" path="res://addons/godot-prototype-texture/PNG/checker_512x512/checker_black_512x512.png" id="12_42miw"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_gisid"]
@@ -82,15 +84,23 @@ mesh = SubResource("PlaneMesh_6mfa5")
 surface_material_override/0 = SubResource("StandardMaterial3D_r4683")
 
 [node name="Town" type="Node3D" parent="." unique_id=1396701851]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -94.09479, 5.0432935, 70.01589)
 
-[node name="TestItem" type="Marker3D" parent="." unique_id=1623448272]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -103.43017, 7.493885, 67.64401)
+[node name="TestItem" type="Marker3D" parent="Town" unique_id=1623448272]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.335381, 2.4505916, -2.3718796)
 script = ExtResource("5_rkgea")
 instance = ExtResource("6_w1u2n")
 metadata/_custom_type_script = "uid://cnmnoegaj2dg8"
 
-[node name="TestNPC" type="Marker3D" parent="." unique_id=1789195231]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -91.26749, 5.1891274, 63.10888)
+[node name="TestNPC" type="Marker3D" parent="Town" unique_id=1789195231]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.827301, 0.14583397, -6.907013)
 script = ExtResource("5_rkgea")
 instance = ExtResource("8_uljpk")
 metadata/_custom_type_script = "uid://cnmnoegaj2dg8"
+
+[node name="Door" type="Marker3D" parent="Town" unique_id=1938298306]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -79.97441, 4.6129823, 81.39967)
+top_level = true
+script = ExtResource("9_winl8")
+instance = ExtResource("10_anbg0")
+metadata/_custom_type_script = "uid://b0o7fkbjswgf4"

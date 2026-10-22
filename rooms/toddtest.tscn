@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://pljab40r1qig"]
+
+[ext_resource type="NavigationMesh" uid="uid://cvpf77u3djxd8" path="res://assets/navmeshes/todd_test.res" id="1_4b11j"]
+[ext_resource type="Texture2D" uid="uid://cv5p7ic0qoy8o" path="res://addons/godot-prototype-texture/PNG/grid_512x512/grid_black_512x512.png" id="1_jeop7"]
+[ext_resource type="Script" uid="uid://b0o7fkbjswgf4" path="res://src/main/kotlin/godot/navigation/Door.kt" id="2_35811"]
+[ext_resource type="Resource" uid="uid://ddc8yc8b3o5ir" path="res://doors/toddtest_island.tres" id="3_35811"]
+
+[sub_resource type="Environment" id="Environment_jeop7"]
+background_mode = 1
+background_color = Color(0.34090847, 0.43385884, 0.50141543, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o2k7t"]
+albedo_texture = ExtResource("1_jeop7")
+uv1_triplanar = true
+
+[node name="ToddTest" type="Node3D" unique_id=1597705976]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1575618462]
+environment = SubResource("Environment_jeop7")
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="WorldEnvironment" unique_id=1001296857]
+navigation_mesh = ExtResource("1_4b11j")
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="WorldEnvironment/NavigationRegion3D" unique_id=377181554]
+material_override = SubResource("StandardMaterial3D_o2k7t")
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="WorldEnvironment/NavigationRegion3D/CSGCombiner3D" unique_id=1787742635]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 0)
+flip_faces = true
+size = Vector3(16, 7, 16)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=215614432]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.026354, -4.274956)
+light_energy = 2.244
+omni_range = 9.868522
+
+[node name="OmniLight3D2" type="OmniLight3D" parent="." unique_id=1347407776]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.026354, 3.7250438)
+light_energy = 2.244
+omni_range = 9.868522
+
+[node name="Door" type="Marker3D" parent="." unique_id=130365493]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 0)
+script = ExtResource("2_35811")
+instance = ExtResource("3_35811")
+metadata/_custom_type_script = "uid://b0o7fkbjswgf4"
