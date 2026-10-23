@@ -26,6 +26,7 @@ class NavigatorComponent : EntityComponent() {
                 entity?.let { e ->
                     currentRoomPath = navigator
                         ?.findPath(field ?: Pair(e.room, e.position), v)
+                        ?.reversed()
                         ?.toMutableList()
                 }
             }

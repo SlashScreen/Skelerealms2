@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://c1c58ixxexn6o"]
 
 [ext_resource type="Texture2D" uid="uid://cr34s4ti3f38l" path="res://assets/environment/sky.png" id="1_rmhow"]
+[ext_resource type="NavigationMesh" uid="uid://cm6sp4cows8f1" path="res://assets/navmeshes/island.res" id="2_anbg0"]
 [ext_resource type="Terrain3DAssets" uid="uid://ypcgr3h6ajxv" path="res://terrain_resources/island/assets.res" id="2_e2cxf"]
 [ext_resource type="Terrain3DMaterial" uid="uid://cxe7lkg646cj2" path="res://terrain_resources/island/material.res" id="2_rkgea"]
-[ext_resource type="NavigationMesh" uid="uid://cm6sp4cows8f1" path="res://terrain_resources/island/navmesh.res" id="2_w1u2n"]
 [ext_resource type="Script" uid="uid://cnmnoegaj2dg8" path="res://src/main/gdscript/godot/tool/entity_marker.gd" id="5_rkgea"]
 [ext_resource type="Resource" uid="uid://bh2ya6leyt6dn" path="res://entities/test_item_1.tres" id="6_w1u2n"]
 [ext_resource type="Resource" uid="uid://v0h3ynvs2vl1" path="res://entities/test_npc_1.tres" id="8_uljpk"]
@@ -48,7 +48,7 @@ transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545
 shadow_enabled = true
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="." unique_id=266833120]
-navigation_mesh = ExtResource("2_w1u2n")
+navigation_mesh = ExtResource("2_anbg0")
 
 [node name="Terrain3D" type="Terrain3D" parent="NavigationRegion3D" unique_id=479098842]
 data_directory = "res://terrains/island/"
