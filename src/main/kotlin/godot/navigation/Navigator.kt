@@ -3,8 +3,12 @@ package godot.navigation
 import godot.annotation.Register
 import godot.annotation.Script
 import godot.api.AStar3D
+import godot.api.FileAccess
 import godot.api.Node
+import godot.api.Resource
+import godot.api.ResourceLoader
 import godot.core.*
+import godot.extension.loadAs
 import org.jgrapht.Graph
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath
 import org.jgrapht.graph.DefaultUndirectedWeightedGraph
@@ -20,8 +24,36 @@ class Navigator : Node() {
     val navMaps = hashMapOf<StringName, AStar3D>()
     val cache = hashMapOf<Pair<StringName, StringName>, List<PathStep>>()
 
+    private val regex = Regex(PATTERN)
+
     override fun _enterTree() {
         instance = this
+    }
+
+    override fun _ready() {
+        // Load all doors and group by room
+        val doors = ResourceLoader
+            .listDirectory(DOOR_PATH)
+            .map { "$DOOR_PATH/$it" }
+            .mapNotNull { ResourceLoader.loadAs<DoorInstance>(it) }
+            .groupBy { it.room }
+
+        // Load graphs and grab room name from path
+        val graphs = ResourceLoader
+            .listDirectory(NAV_PATH)
+            .map { "$NAV_PATH/$it" }
+            .mapNotNull { path ->
+                ResourceLoader.loadAs<SimpleNavGraph>(path)?.let { graph ->
+                    regex.matchEntire(path)?.let { matchResult ->
+                        matchResult.groupValues.getOrNull(1)?.let { gName -> Pair(gName.asCachedStringName(), graph) }
+                    }
+                }
+            }
+
+        // Load all found graphs
+        graphs.forEach { (room, graph) ->
+            loadRoom(room, graph, doors[room] ?: listOf())
+        }
     }
 
     fun invalidateCache() {
@@ -211,8 +243,10 @@ class Navigator : Node() {
     class PointsPathStep(val path: PackedVector3Array) : PathStep() // Move along a path
 
     companion object {
+        // TODO: Make this a setting
         private const val DOOR_PATH = "res://doors/"
         private const val NAV_PATH = "res://navgraphs/"
+        private const val PATTERN = """.*/(.*)\.(?:res|tres)"""
 
         var instance: Navigator? = null
     }
