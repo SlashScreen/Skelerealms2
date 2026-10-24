@@ -3,12 +3,12 @@ package godot.navigation
 import godot.annotation.Register
 import godot.annotation.Script
 import godot.api.AStar3D
-import godot.api.FileAccess
 import godot.api.Node
-import godot.api.Resource
 import godot.api.ResourceLoader
 import godot.core.*
 import godot.extension.loadAs
+import godot.global.GD
+import godot.tools.registry.Registry
 import org.jgrapht.Graph
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath
 import org.jgrapht.graph.DefaultUndirectedWeightedGraph
@@ -23,6 +23,7 @@ class Navigator : Node() {
     val roomGraph: Graph<StringName, PathEdge> = DefaultUndirectedWeightedGraph(PathEdge::class.java)
     val navMaps = hashMapOf<StringName, AStar3D>()
     val cache = hashMapOf<Pair<StringName, StringName>, List<PathStep>>()
+    val doorRegistry = Registry<DoorInstance>("res://doors.tres") // TODO: project setting?
 
     private val regex = Regex(PATTERN)
 
@@ -197,6 +198,7 @@ class Navigator : Node() {
                 }
 
                 // Add connection
+                GD.print("Connecting and adding rooms $roomA and $roomB")
                 roomGraph.addVertex(roomA)
                 roomGraph.addVertex(roomB)
                 roomGraph.addEdge(

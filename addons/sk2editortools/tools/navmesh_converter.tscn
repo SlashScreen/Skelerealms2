@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bfwa1megx55wa"]
 
-[ext_resource type="NavigationMesh" uid="uid://cvpf77u3djxd8" path="res://assets/navmeshes/todd_test.res" id="1_e0lyu"]
+[ext_resource type="NavigationMesh" uid="uid://cvpf77u3djxd8" path="res://assets/navmeshes/toddtest.res" id="1_e0lyu"]
 [ext_resource type="NavigationMesh" uid="uid://cm6sp4cows8f1" path="res://assets/navmeshes/island.res" id="2_yf67c"]
 
 [sub_resource type="GDScript" id="GDScript_ebb26"]

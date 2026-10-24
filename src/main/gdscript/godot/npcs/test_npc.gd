@@ -24,7 +24,7 @@ func _ready() -> void:
 	var nc := e.get_component_by_type(NavigatorComponent) as NavigatorComponent
 
 	nc.world_target_changed.connect(set_world_target)
-	nc.test_pos_set()
+	nc.set_target_world_and_pos(&"toddtest", Vector3.ZERO)
 
 
 func _physics_process(_delta: float) -> void:
