@@ -4,7 +4,7 @@ extends Resource
 
 
 ## The directory this gets resources from.
-@export var scan_path: String
+@export_dir var scan_path: String
 
 ## All names this registry has.
 var names: Array[StringName]:

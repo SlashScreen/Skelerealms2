@@ -1,6 +1,7 @@
 package godot
 
 import godot.annotation.Export
+import godot.annotation.HintString
 import godot.annotation.Script
 import godot.api.Node
 import godot.api.PackedScene
@@ -14,11 +15,18 @@ class RoomManager : Node() {
     @Export
     var gameWorld: GameWorld? = null
 
-    @Export
+    @HintString("RuntimeRegistry")
     var registry: Resource? = null
     var room: Node? = null
 
-    private val runtimeRegistry = RuntimeRegistry<PackedScene>(registry ?: throw Error("Room manager needs registry"))
+    private val runtimeRegistry: RuntimeRegistry<PackedScene>
+        get() {
+            if (!this::lateRuntimeRegistry.isInitialized) {
+                lateRuntimeRegistry = RuntimeRegistry(registry ?: throw Error("RoomManager needs a backing registry"))
+            }
+            return lateRuntimeRegistry
+        }
+    private lateinit var lateRuntimeRegistry: RuntimeRegistry<PackedScene>
 
     override fun _ready() {
         gameWorld!!.roomChanged.connectLambda { changeRoom(it) }

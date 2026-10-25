@@ -25,7 +25,7 @@ class NavigatorComponent : EntityComponent() {
                 // Make a new path if we are going somewhere
                 entity?.let { e ->
                     currentRoomPath = navigator
-                        ?.findPath(field ?: Pair(e.room, e.position), v)
+                        .findPath(field ?: Pair(e.room, e.position), v)
                         ?.reversed()
                         ?.toMutableList()
                 }
@@ -55,7 +55,7 @@ class NavigatorComponent : EntityComponent() {
     private var currentRoomPath: MutableList<Navigator.PathStep>? = null
     private var currentPointsPath: PackedVector3Array? = null
 
-    private val navigator: Navigator?
+    private val navigator: Navigator
         get() = Navigator.instance
     private val moveSpeed = 2.0
     private val currentStep: Navigator.PathStep?

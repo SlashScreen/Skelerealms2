@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="RuntimeRegistry" format=3 uid="uid://bsw0ovl7crtf2"]
+
+[ext_resource type="Script" uid="uid://cgnnhptx1s0y" path="res://src/main/gdscript/godot/runtime_registry.gd" id="1_4niyp"]
+
+[resource]
+script = ExtResource("1_4niyp")
+scan_path = "res://doors"
+metadata/_custom_type_script = "uid://cgnnhptx1s0y"

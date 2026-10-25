@@ -3,23 +3,28 @@
 [ext_resource type="Resource" uid="uid://cvjsmu8okp63r" path="res://sk_settings.tres" id="2_e2u21"]
 [ext_resource type="Script" uid="uid://bvxlobgm5e5ix" path="res://src/main/kotlin/godot/GameWorld.kt" id="2_j2q8x"]
 [ext_resource type="Script" uid="uid://pmijsurev86l" path="res://src/main/kotlin/godot/RoomManager.kt" id="3_112p8"]
-[ext_resource type="Script" uid="uid://bkmw1bbrw1eid" path="res://src/main/kotlin/godot/EntityRegistry.kt" id="3_e2u21"]
+[ext_resource type="Script" uid="uid://cgnnhptx1s0y" path="res://src/main/gdscript/godot/runtime_registry.gd" id="3_e2u21"]
 
-[sub_resource type="Resource" id="Resource_mmcvn"]
+[sub_resource type="Resource" id="Resource_iepyp"]
 script = ExtResource("3_e2u21")
-res_path = "res://entities/"
-metadata/_custom_type_script = "uid://bkmw1bbrw1eid"
+scan_path = "res://entities"
+metadata/_custom_type_script = "uid://cgnnhptx1s0y"
+
+[sub_resource type="Resource" id="Resource_yup83"]
+script = ExtResource("3_e2u21")
+scan_path = "res://rooms"
+metadata/_custom_type_script = "uid://cgnnhptx1s0y"
 
 [node name="Main" type="Node" unique_id=1566812103]
 
 [node name="GameWorld" type="Node" parent="." unique_id=1679639573]
 script = ExtResource("2_j2q8x")
 settings = ExtResource("2_e2u21")
-registry = SubResource("Resource_mmcvn")
+runtime_registry = SubResource("Resource_iepyp")
 metadata/_custom_type_script = "uid://bvxlobgm5e5ix"
 
 [node name="RoomManager" type="Node" parent="." unique_id=987974496 node_paths=PackedStringArray("game_world")]
 script = ExtResource("3_112p8")
-rooms_path = "res://rooms/"
 game_world = NodePath("../GameWorld")
+registry = SubResource("Resource_yup83")
 metadata/_custom_type_script = "uid://pmijsurev86l"

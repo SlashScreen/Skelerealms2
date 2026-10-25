@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="RuntimeRegistry" format=3 uid="uid://icmeid7q411m"]
+
+[ext_resource type="Script" uid="uid://cgnnhptx1s0y" path="res://src/main/gdscript/godot/runtime_registry.gd" id="1_epxaw"]
+
+[resource]
+script = ExtResource("1_epxaw")
+scan_path = "res://navgraphs"
+metadata/_custom_type_script = "uid://cgnnhptx1s0y"

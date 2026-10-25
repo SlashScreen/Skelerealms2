@@ -24,11 +24,18 @@ class GameWorld : Node() {
     var runtimeRegistry: Resource? = null
 
     /** Registry reference. */
-    private var registry: SaveGameRegistry = SaveGameRegistry(
-        RuntimeRegistry<EntityInstance>(
-            runtimeRegistry ?: throw Error("Game world needs entity registry")
-        ), null // TODO
-    )
+    private val registry: SaveGameRegistry
+        get() {
+            if (this::lateSaveGameRegistry.isInitialized) {
+                lateSaveGameRegistry = SaveGameRegistry(
+                    RuntimeRegistry(
+                        runtimeRegistry ?: throw Error("GameWorld must have backing registry")
+                    ), null // TODO: savegame
+                )
+            }
+            return lateSaveGameRegistry
+        }
+    private lateinit var lateSaveGameRegistry: SaveGameRegistry
 
     /** The current room that this world is in. */
     @Visible
@@ -40,9 +47,6 @@ class GameWorld : Node() {
             roomChanged.emit(value)
             registry.getAllEntitiesInRoom(value).forEach { addEntityByName(it) }
         }
-
-    /** The navigator for this world. */
-    val navigator = Navigator()
 
     /** Entities reference map. */
     private val entities: HashMap<StringName, Entity> = HashMap()
@@ -124,9 +128,13 @@ class GameWorld : Node() {
 
     /** Create a SaveGame for this GameWorld. */
     @Register
-    fun createSaveGame(): SaveGame = SaveGame().apply { data = gatherSaveData() }
+    fun createSaveGame(): SaveGame = SaveGame().apply {
+        data = gatherSaveData()
+        deletedEntities = registry.deletedEntities.toVariantArray()
+    }
 
     /** Apply a SaveGame to this GameWorld. */
     @Register
-    fun applySaveGame(saveData: SaveGame) = applySaveData(saveData.data)
+    fun applySaveGame(saveData: SaveGame) =
+        applySaveData(saveData.data) // TODO: How do we go about this? Reset the registry?
 }

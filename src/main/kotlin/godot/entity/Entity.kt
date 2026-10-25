@@ -105,7 +105,6 @@ class Entity : Node() {
 
     // TODO: Don't be full by default
     private fun onGameWorldRoomChanged(newRoom: StringName) {
-        GD.print("$name: onGameWorldRoomChanged() called with: newRoom = $newRoom (in room $room)")
         simState = when {
             newRoom == room -> SimState.FULL
             else -> SimState.PARTIAL
@@ -187,7 +186,6 @@ class Entity : Node() {
         val n = prototype.constructComponent(userdata)
         n.prototype = prototype
         val cName = (n.getScript() as godot.api.Script).getGlobalName()
-        log("add component $cName")
         n.name = cName
 
         if (components.containsKey(cName)) {
