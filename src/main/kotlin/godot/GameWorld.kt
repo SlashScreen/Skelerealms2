@@ -26,11 +26,11 @@ class GameWorld : Node() {
     /** Registry reference. */
     private val registry: SaveGameRegistry
         get() {
-            if (this::lateSaveGameRegistry.isInitialized) {
+            if (!this::lateSaveGameRegistry.isInitialized) {
                 lateSaveGameRegistry = SaveGameRegistry(
-                    RuntimeRegistry(
+                    RuntimeRegistry<EntityInstance>(
                         runtimeRegistry ?: throw Error("GameWorld must have backing registry")
-                    ), null // TODO: savegame
+                    ).apply { scan() }, null // TODO: savegame
                 )
             }
             return lateSaveGameRegistry

@@ -22,7 +22,9 @@ class RoomManager : Node() {
     private val runtimeRegistry: RuntimeRegistry<PackedScene>
         get() {
             if (!this::lateRuntimeRegistry.isInitialized) {
-                lateRuntimeRegistry = RuntimeRegistry(registry ?: throw Error("RoomManager needs a backing registry"))
+                lateRuntimeRegistry = RuntimeRegistry<PackedScene>(
+                    registry ?: throw Error("RoomManager needs a backing registry")
+                ).apply { scan() }
             }
             return lateRuntimeRegistry
         }
@@ -36,7 +38,7 @@ class RoomManager : Node() {
         room?.queueFree()
 
         val ps = runtimeRegistry.loadEntry(newRoom) ?: run {
-            GD.pushError("No room with ID $newRoom")
+            GD.pushError("No room with ID $newRoom (${runtimeRegistry.names})")
             return
         }
 
