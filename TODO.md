@@ -1,12 +1,13 @@
 - [ ] Room change
 - [x] Basic first person controller
+- [X] Rework registry system
 - [ ] Range to camera simulation
 - [ ] Hook up GOAP
 - [ ] Navigation
-  - [X] Portals
+  - [ ] Portals
   - [X] Precompile?
   - [X] Navmesh?
-  - [ ] Agent
+  - [X] Agent
   - [X] A*
   - [X] Room-based cache
   - [ ] Door locking
@@ -19,9 +20,9 @@
 - [X] Pick up items
 - [ ] Tools
   - [X] Entity world placement
-  - [ ] Entity sync
-  - [ ] Door stuff
-  - [ ] Navmesh stuff
+  - [X] Navmesh stuff
+  - [ ] Registry (Steal YARD)
+  - [ ] Door placement and connection
 - [X] Better mutable-immutable relationship
 - [ ] Factions
   - [X] Membership
@@ -35,3 +36,8 @@
 - [ ] Savegame
   - [ ] Finish
   - [ ] Test
+- [ ] UI
+  - [ ] Inventories
+  - [ ] Dialogue
+  - [X] Tooltips
+  - [ ] HUD

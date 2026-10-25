@@ -7,12 +7,9 @@ import godot.api.*
 import godot.core.PackedInt32Array
 import godot.core.PackedVector3Array
 import godot.core.VariantArray
-import godot.core.dictionaryOf
 import godot.core.variantArrayOf
 import godot.global.GD
 import org.jgrapht.alg.util.UnorderedPair
-import kotlin.math.max
-import kotlin.math.min
 
 @Tool
 @Script

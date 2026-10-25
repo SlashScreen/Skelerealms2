@@ -11,6 +11,10 @@ import godot.global.GD
 
 /** Entity registry with an optional save game layer on top. */
 class SaveGameRegistry(private val backingRegistry: RuntimeRegistry<EntityInstance>, private val saveGame: SaveGame?) {
+    /** Deleted entities. */
+    val deletedEntities: MutableSet<StringName> =
+        saveGame?.deletedEntities?.toMutableSet() ?: mutableSetOf()
+
     /** Loaded entity instances. */
     private val entities = backingRegistry.loadAllBlocking() // I do not like this
 
@@ -56,10 +60,15 @@ class SaveGameRegistry(private val backingRegistry: RuntimeRegistry<EntityInstan
                         ?: true // we're good although this should be unreachable
                 } else true // we're good
             }
-            return saveEntitiesInRoom.union(nonOverwrittenImmutableEntities).toList()
+            return (saveEntitiesInRoom.union(nonOverwrittenImmutableEntities) - deletedEntities).toList()
         }
 
-        return immutableEntities
+        return immutableEntities.filterNot { deletedEntities.contains(it) }
+    }
+
+    /** Mark an entity as deleted so it doesn't spawn again. */
+    fun deleteEntity(id: StringName) {
+        deletedEntities.add(id)
     }
 
     private fun getSaveGameEntityRoom(sg: SaveGame, name: StringName): StringName? {

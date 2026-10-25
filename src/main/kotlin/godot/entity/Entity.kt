@@ -7,24 +7,45 @@ import godot.core.*
 import godot.extension.connectLambda
 import godot.global.GD
 
+/* TODO
+* Prototype link for savegame
+* hasComponent: Generic
+*/
+
 @Script
 class Entity : Node() {
-    enum class SimState { FULL, PARTIAL, NONE }
+    /** Entity Simulation State. */
+    enum class SimState {
+        /** Fully simulated, in the scene. */
+        FULL,
 
+        /** Partially simulated. Does basic actions. */
+        PARTIAL,
+
+        /** Does not get simulated. */
+        NONE
+    }
+
+    /** Emitted when the room changes. */
     @Emit
     val roomChanged by signal1<StringName>()
 
+    /** Emitted when the sim state changes. */
     @Emit
     val simStateChanged by signal1<SimState>()
 
+    /** The transform for this entity. */
     @Visible
     var transform: Transform3D = Transform3D.IDENTITY
 
+    /** Reference to the GameWorld this Entity is underneath. */
     @Visible
     var gameWorld: GameWorld? = null
 
+    /** References to components. */
     private val components: HashMap<StringName, EntityComponent> = hashMapOf()
 
+    /** Simulation State. */
     @Export
     var simState: SimState = SimState.NONE
         set(value) {
@@ -34,6 +55,7 @@ class Entity : Node() {
             simStateChanged.emit(simState)
         }
 
+    /** The room this entity is in. */
     @Export
     var room: StringName = "".asCachedStringName()
         set(value) {
@@ -50,6 +72,7 @@ class Entity : Node() {
             }
         }
 
+    /** Global position of the entity. */
     @Export
     var position: Vector3
         get() = transform.origin
@@ -57,6 +80,7 @@ class Entity : Node() {
             transform.origin = value
         }
 
+    /** Euler rotation of this entity. */
     @Export
     var rotation: Vector3
         get() = transform.basis.getEuler()
@@ -64,6 +88,7 @@ class Entity : Node() {
             transform.basis = Basis(value)
         }
 
+    /** Quaternion rotation of this entity. */
     @Export
     var quaternion: Quaternion
         get() = transform.basis.getQuaternion()
@@ -78,6 +103,7 @@ class Entity : Node() {
         }
     }
 
+    // TODO: Don't be full by default
     private fun onGameWorldRoomChanged(newRoom: StringName) {
         GD.print("$name: onGameWorldRoomChanged() called with: newRoom = $newRoom (in room $room)")
         simState = when {
@@ -86,19 +112,21 @@ class Entity : Node() {
         }
     }
 
-    // TODO: Don't be full by default
-
+    /** Get component, generic. */
     inline fun <reified T> getComponent(): T? where T : EntityComponent {
         val n = StringName(T::class.simpleName ?: "")
         return getComponentByName(n) as? T
     }
 
+    /** Get component by class name. */
     @Register
     fun getComponentByName(n: StringName): EntityComponent? = components[n]
 
+    /** Get component by script class. Used for GDScript. */
     @Register
     fun getComponentByType(script: godot.api.Script): EntityComponent? = components[script.getGlobalName()]
 
+    /** Add component, generic. */
     inline fun <reified T> addComponent(component: T) where T : EntityComponent {
         val n = StringName(T::class.simpleName ?: "")
         if (hasComponent(n)) {
@@ -110,6 +138,7 @@ class Entity : Node() {
         }
     }
 
+    /** Add a component by an already created node. */
     @Register
     fun addComponentByNode(component: EntityComponent) {
         val s = component.getScript() as godot.api.Script
@@ -123,15 +152,20 @@ class Entity : Node() {
         }
     }
 
+    /** Add a component by its node and a name. */
+    @Register
     fun addComponentByName(cName: StringName, component: EntityComponent) {
         components[cName] = component
     }
 
+    /** Remove a component, generic. */
     inline fun <reified T> removeComponent() = removeComponentByName(StringName(T::class.simpleName ?: ""))
 
+    /** Remove a component by a script class. Used for GDScript. */
     @Register
     fun removeComponentByType(script: godot.api.Script) = removeComponentByName(script.getGlobalName())
 
+    /** Remove a component by name. */
     @Register
     fun removeComponentByName(n: StringName) {
         components[n]?.let { c ->
@@ -140,8 +174,11 @@ class Entity : Node() {
         }
     }
 
+    /** Does this have a component? */
+    @Register
     fun hasComponent(componentName: StringName): Boolean = components.containsKey(componentName)
 
+    /** Add a component by using a prototype. */
     @Register
     fun addComponentFromPrototype(
         prototype: EntityComponentPrototype,
@@ -162,6 +199,7 @@ class Entity : Node() {
         }
     }
 
+    /** Gather this entity's savegame data. */
     @Register
     fun gatherSaveData(): Dictionary<StringName, Dictionary<StringName, Any?>> =
         Dictionary<StringName, Dictionary<StringName, Any?>>().also {
@@ -169,9 +207,14 @@ class Entity : Node() {
                 component.getSaveData()?.let { data -> it[component.saveDataKey()] = data }
             }
             it["entity".asCachedStringName()] =
-                dictionaryOf("tx".asCachedStringName() to transform, "room".asCachedStringName() to room)
+                dictionaryOf(
+                    "tx".asCachedStringName() to transform,
+                    "room".asCachedStringName() to room,
+                    //"prototype".asCachedStringName() to
+                )
         }
 
+    /** Apply save data to this entity. */
     @Register
     fun applySaveData(data: Dictionary<StringName, Dictionary<StringName, Any?>>) {
         // Load entity stuff
@@ -185,12 +228,15 @@ class Entity : Node() {
         data.forEach { (id, packet) -> components.values.first { ec -> ec.handlesSaveData(id) }.loadFromData(packet) }
     }
 
+    /** Teleport this entity. */
     @Register
     fun teleport(location: Vector3, room: StringName) {
         this.room = room
         position = location
     }
 
+    /** Log message, giving the entity's name in the printed string. */
+    @Register
     fun log(msg: String) {
         GD.print("$name: $msg")
     }

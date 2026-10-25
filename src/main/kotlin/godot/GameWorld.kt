@@ -2,26 +2,35 @@ package godot
 
 import godot.annotation.*
 import godot.api.Node
+import godot.api.Resource
 import godot.core.*
 import godot.entity.Entity
 import godot.entity.EntityInstance
 import godot.global.GD
 import godot.navigation.Navigator
 
-// TODO
-// Move rooms to being nodes
-
 @Script
 class GameWorld : Node() {
+    /** Emitted when the game's world changes. */
     @Emit
     val roomChanged by signal1<StringName>()
 
+    /** Settings object. */
     @Export
     var settings: SKSettings? = null
 
-    @Export
-    var registry: EntityRegistry? = null
+    /** RuntimeRegistry to back the internal registry. */
+    @HintString("RuntimeRegistry")
+    var runtimeRegistry: Resource? = null
 
+    /** Registry reference. */
+    private var registry: SaveGameRegistry = SaveGameRegistry(
+        RuntimeRegistry<EntityInstance>(
+            runtimeRegistry ?: throw Error("Game world needs entity registry")
+        ), null // TODO
+    )
+
+    /** The current room that this world is in. */
     @Visible
     var currentRoom: StringName
         get() = room
@@ -29,17 +38,19 @@ class GameWorld : Node() {
             GD.print("Changing Gameworld room to: $value")
             room = value
             roomChanged.emit(value)
+            registry.getAllEntitiesInRoom(value).forEach { addEntityByName(it) }
         }
 
+    /** The navigator for this world. */
     val navigator = Navigator()
 
+    /** Entities reference map. */
     private val entities: HashMap<StringName, Entity> = HashMap()
+
+    /** Internal room value. */
     private var room: StringName = "".asCachedStringName()
 
     override fun _ready() {
-        registry?.initialize()
-        loadAllEntities()
-
         lambdaCallable0 {
             settings?.let { s ->
                 GD.print("Applying settings")
@@ -49,26 +60,52 @@ class GameWorld : Node() {
         }.callDeferred()
     }
 
+    /** Ask the game to load an entity. */
     @Register
-    fun addEntityFromInstance(instance: EntityInstance, userdata: Dictionary<StringName, Any?> = Dictionary()) {
+    fun addEntityByName(id: StringName, userdata: Dictionary<StringName, Any?> = Dictionary()) {
+        val (eInstance, saveData) = registry.loadEntityInstance(id) ?: return
+        val entity = addEntityFromInstance(eInstance, userdata) ?: return
+        saveData?.let { entity.applySaveData(it) }
+    }
+
+    /** Load an entity from an instance directly. */
+    @Register
+    fun addEntityFromInstance(
+        instance: EntityInstance,
+        userdata: Dictionary<StringName, Any?> = Dictionary()
+    ): Entity? {
         val n = instance.constructEntity(userdata)
         if (entities.containsKey(n.name)) {
-            GD.printErr("Entity ${n.name} already exists")
+            GD.pushWarning("Entity ${n.name} already exists")
             n.queueFree()
-            return
+            return null
         }
         entities[n.name] = n
         n.gameWorld = this
         addChild(n)
         GD.print("Entity ${n.name} added")
+        return n
     }
 
+    /** Get an entity, if it's loaded. */
     @Register
     fun getEntity(entityName: StringName): Entity? = entities[entityName]
 
+    /** Does this entity exist? */
     @Register
     fun entityExists(entityName: StringName): Boolean = entities.containsKey(entityName)
 
+    /** Delete entity - it will never spawn or be created again. */
+    @Register
+    fun deleteEntity(entityName: StringName) {
+        entities[entityName]?.let { e ->
+            e.queueFree()
+            entities.remove(entityName)
+            registry.deleteEntity(entityName)
+        }
+    }
+
+    /** Gather the savegame data for all entities. */
     @Register
     fun gatherSaveData(): Dictionary<StringName, Dictionary<StringName, Dictionary<StringName, Any?>>> =
         Dictionary<StringName, Dictionary<StringName, Dictionary<StringName, Any?>>>().also { dictionary ->
@@ -77,6 +114,7 @@ class GameWorld : Node() {
             }
         }
 
+    /** Apply savegame data for all loaded entities. */
     @Register
     fun applySaveData(data: Dictionary<StringName, Dictionary<StringName, Dictionary<StringName, Any?>>>) {
         data.forEach { (key, dictionary) ->
@@ -84,21 +122,11 @@ class GameWorld : Node() {
         }
     }
 
+    /** Create a SaveGame for this GameWorld. */
     @Register
     fun createSaveGame(): SaveGame = SaveGame().apply { data = gatherSaveData() }
 
+    /** Apply a SaveGame to this GameWorld. */
     @Register
     fun applySaveGame(saveData: SaveGame) = applySaveData(saveData.data)
-
-    @Register
-    fun loadAllEntities(userdata: Dictionary<StringName, Any?> = Dictionary()) {
-        entities.values.forEach { e -> e.queueFree() }
-        entities.clear()
-
-        val instances = registry?.loadAllBlocking() ?: run {
-            GD.printErr("Needs entity registry to load entities.")
-            return
-        }
-        instances.values().forEach { instance -> addEntityFromInstance(instance, userdata) }
-    }
 }
