@@ -8,13 +8,13 @@ extends Resource
 
 ## All names this registry has.
 var names: Array[StringName]:
-	get: return _names_to_ids.keys()
-## All UIDs this registry has.
-var ids: Array[int]:
-	get: return _names_to_ids.values()
+	get: return _names_to_paths.keys()
+## All paths this registry has.
+var paths: Array[String]:
+	get: return _names_to_paths.values()
 
-## Name to ID table.
-var _names_to_ids: Dictionary[StringName, int]
+## Name to path table.May be res:// or uid://
+var _names_to_paths: Dictionary[StringName, String]
 
 
 ## Scan a directory and catalogue all within.
@@ -29,15 +29,14 @@ func scan(path: String = scan_path) -> void:
 			scan(res_path)
 		else: #file
 			var res_name := item.split(".")[0]
-			var uid := ResourceUID.text_to_id(ResourceUID.path_to_uid(res_path))
-			_names_to_ids[StringName(res_name)] = uid
+			_names_to_paths[StringName(res_name)] = ResourceUID.path_to_uid(res_path)
 
 
 ## Load an entry from name, with optional hint string and cache mode. Returns null if none found.
 func load_entry(name: StringName, type_hint: String = "", cache_mode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.CACHE_MODE_REUSE) -> Resource:
-	if not _names_to_ids.has(name): return null
+	if not _names_to_paths.has(name): return null
 
-	var path := ResourceUID.uid_to_path(ResourceUID.id_to_text(_names_to_ids[name]))
+	var path := ResourceUID.ensure_path(_names_to_paths[name])
 	return ResourceLoader.load(path, type_hint, cache_mode)
 
 
@@ -45,17 +44,17 @@ func load_entry(name: StringName, type_hint: String = "", cache_mode: ResourceLo
 func load_all_blocking(type_hint: String = "", cache_mode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.CACHE_MODE_REUSE) -> Dictionary[StringName, Resource]:
 	var res: Dictionary[StringName, Resource] = {}
 
-	for name: StringName in _names_to_ids:
-		res[name] = ResourceLoader.load(ResourceUID.uid_to_path(ResourceUID.id_to_text(_names_to_ids[name])), type_hint, cache_mode)
+	for name: StringName in _names_to_paths:
+		res[name] = ResourceLoader.load(ResourceUID.ensure_path(_names_to_paths[name]), type_hint, cache_mode)
 
 	return res
 
 
 ## Check if this registry has an entry.
 func has_entry(name: StringName) -> bool:
-	return _names_to_ids.has(name)
+	return _names_to_paths.has(name)
 
 
-## Get UID for an entry. -1 if none exists.
-func get_id_for_entry(name: StringName) -> int:
-	return _names_to_ids[name] if has_entry(name) else -1
+## Get path for an entry. EMpty if none exists.
+func get_path_for_entry(name: StringName) -> String:
+	return _names_to_paths[name] if has_entry(name) else ""

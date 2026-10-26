@@ -45,14 +45,17 @@ class Navigator : Node() {
         val doors = doorRegistry.loadAllBlocking()
             .values
             .groupBy { it.room }
+        GD.print(doors)
 
         // Load graphs and grab room name from path
         val graphs = graphRegistry.loadAllBlocking()
+        GD.print(graphs)
 
         // Load all found graphs
         graphs.forEach { (room, graph) ->
             loadRoom(room, graph, doors[room] ?: listOf())
         }
+        GD.print(roomGraph.toString())
     }
 
     /** Invalidate the internal path cache. */
@@ -77,7 +80,10 @@ class Navigator : Node() {
 
         val pathGen =
             DijkstraShortestPath(roomGraph) // Dijkstra since we don't super have a good distance thing? Unless I can finagle something with edges
-        val path = pathGen.getPath(a.first, b.first) ?: return null
+        val path = pathGen.getPath(a.first, b.first) ?: run {
+            GD.print("Could not find path between rooms ${a.first} and ${b.first}")
+            return null
+        }
 
         // First
 
@@ -89,11 +95,14 @@ class Navigator : Node() {
             // Add path to door, then switch to next room
             var first = edges.first()!!
 
-            val ptA = astar.getClosestPoint(a.second)
-            val ptB = astar.getClosestPoint(first.endPortalIn)
-            val path = astar.getPointPath(ptA, ptB)
+            val ptA = astar.getClosestPoint(a.second).also { GD.print(it) }
+            val ptB = astar.getClosestPoint(first.endPortalIn).also { GD.print(it) }
+            val path = astar.getPointPath(ptA, ptB) // TODO: I don't actually want partial path
 
-            if (path.isEmpty()) return null
+            if (path.isEmpty()) {
+                GD.print("Cannot find path from point to first door. Cancelling path.")
+                return null
+            }
             steps.add(PointsPathStep(path))
             steps.add(AbsoluteStep(verts[1], first.endPortalOut))
         }
@@ -124,11 +133,15 @@ class Navigator : Node() {
             val ptB = astar.getClosestPoint(b.second)
             val path = astar.getPointPath(ptA, ptB, true) // Allow incomplete path here
 
-            if (path.isEmpty()) return null
+            if (path.isEmpty()) {
+                GD.print("Cannot find path from last door to point. Cancelling path.")
+                return null
+            }
             steps.add(PointsPathStep(path))
         }
 
         if (steps.size > 2) cache[Pair(a.first, b.first)] = steps.slice(1 until steps.size)
+        GD.print("Calculated path: $steps")
 
         return steps
     }
@@ -189,6 +202,7 @@ class Navigator : Node() {
     // TODO: support chunks?
     /** Load a room, providing a nav graph and a list of doors in that room. */
     fun loadRoom(roomName: StringName, mesh: SimpleNavGraph, doors: List<DoorInstance>) {
+        GD.print("Loading room graph $roomName...")
         val astar = mesh.intoAStar()
         navMaps[roomName] = astar
 
@@ -196,43 +210,75 @@ class Navigator : Node() {
         // 1. Finds one door and another
         // 2. Tries to connect
         // 3. If they connect, this room can connect to the other, so add that as the edge with length as weight
-        for (a in doors) {
-            for (b in doors) {
-                if (a == b) continue // Skip if same door
 
-                val roomA = a.room
-                val roomB = b.otherSide?.room ?: continue // Skip if door has no other side
+        if (doors.size == 1) {
+            val a = doors.first()
+            val roomA = a.room
+            // TODO: The cache should cover this but maybe dont load it again
+            // We could just pass in All doors and use that since we have it by this point.
+            val otherSide = doorRegistry.loadEntry(a.otherSide) ?: run {
+                GD.print("Door has no other side. Skipping...")
+                return
+            } // Skip if door has no other side
+            val roomB = otherSide.room
 
-                // Calculate path
-
-                val pointA = astar.getClosestPoint(a.position)
-                val pointB = astar.getClosestPoint(b.position)
-
-                val path = astar.getPointPath(pointA, pointB)
-                if (path.isEmpty()) continue // Skip if cannot find path
-
-                // Get length (squared) of path. Accurate length doesn't matter for path calculations.
-                var lastVertex = path.first()
-                val pathCost = path.fold(0.0) { accum, next ->
-                    (accum + lastVertex.distanceSquaredTo(next)).also {
-                        lastVertex = next
-                    }
-                }
-
-                // Add connection
-                GD.print("Connecting and adding rooms $roomA and $roomB")
-                roomGraph.addVertex(roomA)
-                roomGraph.addVertex(roomB)
-                roomGraph.addEdge(
-                    roomA, roomB, PathEdge(
-                        path,
-                        b.position,
-                        b.otherSide!!.position, // If we've gotten here we know this isn't null
-                        pathCost
-                    )
+            roomGraph.addVertex(roomA)
+            roomGraph.addVertex(roomB)
+            roomGraph.addEdge(
+                roomA, roomB, PathEdge(
+                    PackedVector3Array(),
+                    a.position,
+                    otherSide.position, // If we've gotten here we know this isn't null
+                    1.0
                 )
+            )
+        } else
+            for (a in doors) {
+                for (b in doors) {
+                    if (a == b) continue // Skip if same door
+
+                    val roomA = a.room
+                    // TODO: The cache should cover this but maybe dont load it again
+                    // We could just pass in All doors and use that since we have it by this point.
+                    val otherSide = doorRegistry.loadEntry(b.otherSide) ?: run {
+                        GD.print("Door has no other side. Skipping...")
+                        continue
+                    } // Skip if door has no other side
+                    val roomB = otherSide.room
+
+                    // Calculate path
+
+                    val pointA = astar.getClosestPoint(a.position)
+                    val pointB = astar.getClosestPoint(b.position)
+
+                    val path = astar.getPointPath(pointA, pointB)
+                    if (path.isEmpty()) run {
+                        GD.print("No path could be baked. Skipping...")
+                        continue
+                    } // Skip if cannot find path
+
+                    // Get length (squared) of path. Accurate length doesn't matter for path calculations.
+                    var lastVertex = path.first()
+                    val pathCost = path.fold(0.0) { accum, next ->
+                        (accum + lastVertex.distanceSquaredTo(next)).also {
+                            lastVertex = next
+                        }
+                    }
+
+                    // Add connection
+                    GD.print("Connecting and adding rooms $roomA and $roomB")
+                    roomGraph.addVertex(roomA)
+                    roomGraph.addVertex(roomB)
+                    roomGraph.addEdge(
+                        roomA, roomB, PathEdge(
+                            path,
+                            b.position,
+                            otherSide.position, // If we've gotten here we know this isn't null
+                            pathCost
+                        )
+                    )
+                }
             }
-        }
     }
 
     /** Serialize the graph for disk cache. */

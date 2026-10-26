@@ -53,6 +53,10 @@ class NavigatorComponent : EntityComponent() {
         }
 
     private var currentRoomPath: MutableList<Navigator.PathStep>? = null
+        set(value) {
+            field = value
+            evalCurrentStep()
+        }
     private var currentPointsPath: PackedVector3Array? = null
 
     private val navigator: Navigator
@@ -114,20 +118,29 @@ class NavigatorComponent : EntityComponent() {
         currentRoomPath = if (currentRoomPath.isNullOrEmpty()) null else currentRoomPath
         if (currentRoomPath == null) return
 
+        evalCurrentStep()
+    }
+
+    private fun evalCurrentStep() {
         when (val cs = currentStep) {
             is Navigator.AbsoluteStep -> {
                 // Execute immediately
+                log("Changing room")
                 entity?.room = cs.room
                 entity?.position = cs.pos
                 nextStep()
             }
 
             is Navigator.PointsPathStep -> {
+                log("Setting current points path")
                 currentPointsPath = cs.path
                 currentPointsPath?.reverse()
+                currentMoveTarget?.let { worldTargetChanged.emit(it) }
             }
 
-            null -> {}
+            null -> {
+                log("No current step.")
+            }
         }
     }
 

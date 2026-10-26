@@ -4,6 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://cv5p7ic0qoy8o" path="res://addons/godot-prototype-texture/PNG/grid_512x512/grid_black_512x512.png" id="1_jeop7"]
 [ext_resource type="Script" uid="uid://b0o7fkbjswgf4" path="res://src/main/kotlin/godot/navigation/Door.kt" id="2_35811"]
 [ext_resource type="Resource" uid="uid://ddc8yc8b3o5ir" path="res://doors/toddtest_island.tres" id="3_35811"]
+[ext_resource type="Script" uid="uid://cupdmygcljqbc" path="res://src/main/gdscript/godot/navigation/simple_nav_graph_preview.gd" id="5_8onp6"]
+[ext_resource type="Resource" path="res://navgraphs/toddtest.res" id="6_xh2m8"]
 
 [sub_resource type="Environment" id="Environment_jeop7"]
 background_mode = 1
@@ -45,3 +47,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 0)
 script = ExtResource("2_35811")
 instance = ExtResource("3_35811")
 metadata/_custom_type_script = "uid://b0o7fkbjswgf4"
+
+[node name="SimpleNavGraphPreview" type="Node3D" parent="." unique_id=551682836]
+script = ExtResource("5_8onp6")
+graph = ExtResource("6_xh2m8")
+metadata/_custom_type_script = "uid://cupdmygcljqbc"

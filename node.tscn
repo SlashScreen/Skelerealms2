@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://bvxlobgm5e5ix" path="res://src/main/kotlin/godot/GameWorld.kt" id="2_j2q8x"]
 [ext_resource type="Script" uid="uid://pmijsurev86l" path="res://src/main/kotlin/godot/RoomManager.kt" id="3_112p8"]
 [ext_resource type="Script" uid="uid://cgnnhptx1s0y" path="res://src/main/gdscript/godot/runtime_registry.gd" id="3_e2u21"]
+[ext_resource type="Script" uid="uid://c8l1x7l2wqo2y" path="res://src/main/kotlin/godot/navigation/Navigator.kt" id="5_bss38"]
 
 [sub_resource type="Resource" id="Resource_iepyp"]
 script = ExtResource("3_e2u21")
@@ -28,3 +29,7 @@ script = ExtResource("3_112p8")
 game_world = NodePath("../GameWorld")
 registry = SubResource("Resource_yup83")
 metadata/_custom_type_script = "uid://pmijsurev86l"
+
+[node name="Navigator" type="Node" parent="." unique_id=1731420421]
+script = ExtResource("5_bss38")
+metadata/_custom_type_script = "uid://c8l1x7l2wqo2y"

@@ -9,9 +9,14 @@ import godot.core.VariantArray
 import godot.core.asCachedStringName
 import godot.core.godotValue
 import godot.extension.loadAs
+import godot.global.GD
 
 /** Kotlin wrapper for RuntimeRegistry GDScript class. */
 class RuntimeRegistry<T>(private val registry: Resource) where T : Resource {
+    init {
+        scan()
+    }
+
     /** Load from a string path instead. */
     constructor(path: String) : this(ResourceLoader.load(path) ?: throw Error("No registry at path $path"))
 
@@ -24,14 +29,14 @@ class RuntimeRegistry<T>(private val registry: Resource) where T : Resource {
     val names: VariantArray<StringName>
         get() = registry.get("names".asCachedStringName()) as VariantArray<StringName>
 
-    /** All UIDs this registry has. */
+    /** All paths this registry has. May be `res://` or `uid://`. */
     @Suppress("UNCHECKED_CAST")
-    val ids: VariantArray<Long>
-        get() = registry.get("ids".asCachedStringName()) as VariantArray<Long>
+    val ids: VariantArray<String>
+        get() = registry.get("paths".asCachedStringName()) as VariantArray<String>
 
     @Suppress("UNCHECKED_CAST")
-    private val namesToIds: Dictionary<StringName, Long>
-        get() = registry.get("_names_to_ids".asCachedStringName()) as Dictionary<StringName, Long>
+    private val namesToPaths: Dictionary<StringName, String>
+        get() = registry.get("_names_to_paths".asCachedStringName()) as Dictionary<StringName, String>
 
     /** Scan a directory and catalogue all within. */
     fun scan(directory: String = scanDir) {
@@ -51,9 +56,9 @@ class RuntimeRegistry<T>(private val registry: Resource) where T : Resource {
         typeHint: String = "",
         cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE
     ): Map<StringName, T> =
-        namesToIds.mapValues { entry ->
+        namesToPaths.mapValues { entry ->
             ResourceLoader.loadAs<T>(
-                ResourceUID.uidToPath(ResourceUID.idToText(entry.value)),
+                ResourceUID.ensurePath(entry.value),
                 typeHint,
                 cacheMode
             )!! // TODO: Error out if null?
@@ -62,7 +67,7 @@ class RuntimeRegistry<T>(private val registry: Resource) where T : Resource {
     /** Check if this registry has an entry. */
     fun hasEntry(name: StringName): Boolean = registry.call("has_entry".asCachedStringName()) as Boolean
 
-    /** Get UID for an entry. Null if none exists. */
-    fun getIdForEntry(name: StringName): Long? =
-        (registry.call("get_id_for_entry".asCachedStringName(), name) as Long).let { if (it == -1L) null else it }
+    /** Get path for an entry. Null if none exists. */
+    fun getPathForEntry(name: StringName): String? =
+        (registry.call("get_path_for_entry".asCachedStringName(), name) as String).let { it.ifEmpty { null } }
 }

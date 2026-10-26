@@ -6,4 +6,5 @@
 script = ExtResource("1_b7rqg")
 position = Vector3(-7, 0, 0)
 room = &"toddtest"
+other_side = &"island_toddtest"
 metadata/_custom_type_script = "uid://btcwh0f8xvr2s"

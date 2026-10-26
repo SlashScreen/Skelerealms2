@@ -30,7 +30,7 @@ class GameWorld : Node() {
                 lateSaveGameRegistry = SaveGameRegistry(
                     RuntimeRegistry<EntityInstance>(
                         runtimeRegistry ?: throw Error("GameWorld must have backing registry")
-                    ).apply { scan() }, null // TODO: savegame
+                    ), null // TODO: savegame
                 )
             }
             return lateSaveGameRegistry

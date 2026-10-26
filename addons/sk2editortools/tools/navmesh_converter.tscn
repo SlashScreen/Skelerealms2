@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://bfwa1megx55wa"]
 
 [ext_resource type="NavigationMesh" uid="uid://cvpf77u3djxd8" path="res://assets/navmeshes/toddtest.res" id="1_e0lyu"]
-[ext_resource type="NavigationMesh" uid="uid://cm6sp4cows8f1" path="res://assets/navmeshes/island.res" id="2_yf67c"]
 
 [sub_resource type="GDScript" id="GDScript_ebb26"]
 script/source = "extends Node
@@ -28,17 +27,23 @@ func _bake() -> void:
 	for nv: NavigationMesh in to_convert:
 		var r_match := regex.search(nv.resource_path)
 		var sn := baker.build_simple_nav_graph(nv)
-		ResourceSaver.save(sn, output + \"%s.res\" % r_match.get_string(1))
+		var path := output + \"%s.res\" % r_match.get_string(1)
+		
+		ResourceSaver.save(sn, path)
+		var uid := ResourceUID.create_id()
+		print(error_string((ResourceSaver.set_uid(path, uid))))
+		ResourceUID.add_id(uid, path)
 
 		progress_bar.value = i / float(to_convert.size()) * 100.0
 		i += 1
 
 	label.text = \"Ding!\"
+	get_tree().create_timer(2.0).timeout.connect(get_tree().quit.bind())
 "
 
 [node name="NavmeshConverter" type="Node" unique_id=753314981]
 script = SubResource("GDScript_ebb26")
-to_convert = Array[NavigationMesh]([ExtResource("1_e0lyu"), ExtResource("2_yf67c")])
+to_convert = Array[NavigationMesh]([ExtResource("1_e0lyu")])
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1097272358]
 anchors_preset = 15

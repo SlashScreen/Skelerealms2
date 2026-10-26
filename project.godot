@@ -85,10 +85,6 @@ run/main_scene="uid://b6whiqpe4cjto"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
-[autoload]
-
-SkNavigator="*uid://c8l1x7l2wqo2y"
-
 [display]
 
 window/stretch/mode="canvas_items"

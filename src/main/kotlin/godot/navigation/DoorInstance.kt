@@ -20,5 +20,5 @@ class DoorInstance : Resource() {
     var room: StringName = "".asCachedStringName()
 
     @Export
-    var otherSide: DoorInstance? = null
+    var otherSide: StringName = "".asCachedStringName()
 }

@@ -24,7 +24,7 @@ class RoomManager : Node() {
             if (!this::lateRuntimeRegistry.isInitialized) {
                 lateRuntimeRegistry = RuntimeRegistry<PackedScene>(
                     registry ?: throw Error("RoomManager needs a backing registry")
-                ).apply { scan() }
+                )
             }
             return lateRuntimeRegistry
         }
