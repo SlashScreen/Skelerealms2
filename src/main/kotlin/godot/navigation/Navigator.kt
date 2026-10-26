@@ -97,12 +97,14 @@ class Navigator : Node() {
 
             val ptA = astar.getClosestPoint(a.second).also { GD.print(it) }
             val ptB = astar.getClosestPoint(first.endPortalIn).also { GD.print(it) }
-            val path = astar.getPointPath(ptA, ptB) // TODO: I don't actually want partial path
+            // TODO: What if they are the same point?
+            val path = astar.getPointPath(ptA, ptB) // Why doesn't this work?
 
             if (path.isEmpty()) {
                 GD.print("Cannot find path from point to first door. Cancelling path.")
                 return null
             }
+            path.append(first.endPortalIn)
             steps.add(PointsPathStep(path))
             steps.add(AbsoluteStep(verts[1], first.endPortalOut))
         }

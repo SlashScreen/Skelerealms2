@@ -11,7 +11,7 @@
 [ext_resource type="Resource" uid="uid://b7aauckbbmxxd" path="res://doors/island_toddtest.tres" id="10_anbg0"]
 [ext_resource type="Script" uid="uid://cupdmygcljqbc" path="res://src/main/gdscript/godot/navigation/simple_nav_graph_preview.gd" id="11_winl8"]
 [ext_resource type="Texture2D" uid="uid://d0pirn4ef5q4p" path="res://addons/godot-prototype-texture/PNG/checker_512x512/checker_black_512x512.png" id="12_42miw"]
-[ext_resource type="Resource" uid="uid://bejbvh4j55kdu" path="res://navgraphs/island.res" id="12_gsfkx"]
+[ext_resource type="Resource" path="res://navgraphs/island.res" id="12_gsfkx"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_gisid"]
 panorama = ExtResource("1_rmhow")

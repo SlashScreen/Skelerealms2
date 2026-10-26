@@ -47,9 +47,9 @@ class SimpleNavGraph : Resource() {
             }
 
             // Collect polygon indices into one buffer
-            (0 until mesh.getPolygonCount()).forEach { i ->
-                mesh.getPolygon(i).forEachIndexed { idx, x ->
-                    indexBuffer[i + idx] = x
+            (0 until mesh.getPolygonCount()).forEach { poly ->
+                mesh.getPolygon(poly).forEachIndexed { idx, x ->
+                    indexBuffer[(poly * 3) + idx] = x
                 }
             }
 
@@ -102,29 +102,24 @@ class SimpleNavGraph : Resource() {
 
             // Calculate barycenters of each polygon
             val barycenters = polyRange.map { poly ->
-                val a = meshTool.getVertex(meshTool.getFaceVertex(poly, 0))
-                val b = meshTool.getVertex(meshTool.getFaceVertex(poly, 1))
-                val c = meshTool.getVertex(meshTool.getFaceVertex(poly, 2))
-
-                ((a + b + c) / 3.0).also { GD.print("($a, $b, $c) -> $it") }
-                // 0.until(VERTS_PER_POLY) // vertex indices
-                //     .fold(Vector3.ZERO) { accum, vert ->
-                //         accum + meshTool.getVertex(
-                //             meshTool.getFaceVertex(
-                //                 poly,
-                //                 vert
-                //             )
-                //         )
-                //     } // Get vertex point from index
-                //     .div(3.0) // Divide into average
+                0.until(VERTS_PER_POLY) // vertex indices
+                    .fold(Vector3.ZERO) { accum, vert ->
+                        accum + meshTool.getVertex(
+                            meshTool.getFaceVertex(
+                                poly,
+                                vert
+                            )
+                        )
+                    } // Get vertex point from index
+                    .div(3.0) // Divide into average
             }
 
             // Collect a list of neighbors for each polygon
             val neighbors = polyRange.map { poly ->
                 0.until(VERTS_PER_POLY) // 3 verts
                     .flatMap { vert ->
-                        meshTool.getVertexFaces(
-                            meshTool.getFaceVertex(
+                        meshTool.getEdgeFaces(
+                            meshTool.getFaceEdge(
                                 poly,
                                 vert
                             )
@@ -135,7 +130,14 @@ class SimpleNavGraph : Resource() {
 
             // Add bidirectional connections to a set, so each is unique
             val connectedSet: MutableSet<UnorderedPair<Int, Int>> = mutableSetOf()
-            connectedSet.addAll(neighbors.flatMapIndexed { poly, nbrs -> nbrs.map { nbr -> UnorderedPair(poly, nbr) } })
+            connectedSet.addAll(neighbors.flatMapIndexed { poly, nbrs ->
+                nbrs.map { nbr ->
+                    UnorderedPair(
+                        poly,
+                        nbr
+                    )
+                }
+            })
 
             // Flatten to indices, return navgraph
             return SimpleNavGraph().apply {
