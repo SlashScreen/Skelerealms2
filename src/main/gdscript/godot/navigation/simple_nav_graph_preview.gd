@@ -7,7 +7,6 @@ extends Node3D
 @export var draw: DebugDraw3D
 
 var _lines: PackedVector3Array
-#var _points: PackedVector3Array
 
 func _ready() -> void:
 	if not Engine.is_editor_hint():
@@ -19,9 +18,6 @@ func _ready() -> void:
 				for to: int in astar.get_point_connections(pt):
 					_lines.append(src)
 					_lines.append(astar.get_point_position(to))
-			# hardcoding just for a sec
-			#_points.append(astar.get_point_position(1058))
-			#_points.append(astar.get_point_position(1609))
 		else:
 			queue_free()
 
@@ -29,5 +25,3 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if draw:
 		draw.draw_line_list(_lines, Color.BLUE_VIOLET)
-		#for p: Vector3 in _points:
-		#	draw.draw_sphere_s(p, Quaternion.IDENTITY, 1.0, Color.RED)
