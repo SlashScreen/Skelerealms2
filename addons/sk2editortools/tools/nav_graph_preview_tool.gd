@@ -4,6 +4,7 @@ extends EditorNode3DGizmoPlugin
 
 func _init() -> void:
 	create_material("main", Color(1, 0, 0))
+	create_material("astar", Color(1, 0.5, 0))
 
 
 func _get_gizmo_name():

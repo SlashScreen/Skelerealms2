@@ -170,6 +170,6 @@ class NavigatorComponent : EntityComponent() {
     override fun saveDataKey(): StringName = "navigatorComponent".asCachedStringName()
 
     companion object {
-        private const val MIN_DIST = 0.01
+        private const val MIN_DIST = 1.0
     }
 }

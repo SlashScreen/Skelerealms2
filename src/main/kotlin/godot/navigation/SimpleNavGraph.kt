@@ -1,6 +1,7 @@
 package godot.navigation
 
 import godot.annotation.Export
+import godot.annotation.Register
 import godot.annotation.Script
 import godot.annotation.Tool
 import godot.api.*
@@ -22,9 +23,10 @@ class SimpleNavGraph : Resource() {
     @Export
     var connections: PackedInt32Array = PackedInt32Array()
 
+    @Register
     fun intoAStar(): AStar3D =
         AStar3D().apply {
-            reserveSpace(points.size.toLong())
+            reserveSpace(points.size.toLong() - 1)
 
             points.forEachIndexed { idx, vec ->
                 addPoint(idx.toLong(), vec)

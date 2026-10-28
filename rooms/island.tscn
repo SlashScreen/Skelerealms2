@@ -11,7 +11,8 @@
 [ext_resource type="Resource" uid="uid://b7aauckbbmxxd" path="res://doors/island_toddtest.tres" id="10_anbg0"]
 [ext_resource type="Script" uid="uid://cupdmygcljqbc" path="res://src/main/gdscript/godot/navigation/simple_nav_graph_preview.gd" id="11_winl8"]
 [ext_resource type="Texture2D" uid="uid://d0pirn4ef5q4p" path="res://addons/godot-prototype-texture/PNG/checker_512x512/checker_black_512x512.png" id="12_42miw"]
-[ext_resource type="Resource" path="res://navgraphs/island.res" id="12_gsfkx"]
+[ext_resource type="Resource" uid="uid://bb1cyfog63x01" path="res://navgraphs/island.res" id="12_gsfkx"]
+[ext_resource type="PackedScene" path="res://addons/debug_draw/debug_draw_3d.tscn" id="13_gsfkx"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_gisid"]
 panorama = ExtResource("1_rmhow")
@@ -107,6 +108,9 @@ script = ExtResource("9_winl8")
 instance = ExtResource("10_anbg0")
 metadata/_custom_type_script = "uid://b0o7fkbjswgf4"
 
-[node name="SimpleNavMeshPreview" type="Node3D" parent="." unique_id=1412854559]
+[node name="SimpleNavMeshPreview" type="Node3D" parent="." unique_id=1412854559 node_paths=PackedStringArray("draw")]
 script = ExtResource("11_winl8")
 graph = ExtResource("12_gsfkx")
+draw = NodePath("DebugDraw3D")
+
+[node name="DebugDraw3D" parent="SimpleNavMeshPreview" unique_id=1427360216 instance=ExtResource("13_gsfkx")]

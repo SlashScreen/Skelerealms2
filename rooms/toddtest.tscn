@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://b0o7fkbjswgf4" path="res://src/main/kotlin/godot/navigation/Door.kt" id="2_35811"]
 [ext_resource type="Resource" uid="uid://ddc8yc8b3o5ir" path="res://doors/toddtest_island.tres" id="3_35811"]
 [ext_resource type="Script" uid="uid://cupdmygcljqbc" path="res://src/main/gdscript/godot/navigation/simple_nav_graph_preview.gd" id="5_8onp6"]
-[ext_resource type="Resource" path="res://navgraphs/toddtest.res" id="6_xh2m8"]
+[ext_resource type="Resource" uid="uid://duwso22336ifw" path="res://navgraphs/toddtest.res" id="6_xh2m8"]
 
 [sub_resource type="Environment" id="Environment_jeop7"]
 background_mode = 1
