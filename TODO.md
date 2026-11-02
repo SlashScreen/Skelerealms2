@@ -3,14 +3,14 @@
 - [X] Rework registry system
 - [ ] Range to camera simulation
 - [ ] Hook up GOAP
-- [ ] Navigation
-  - [ ] Portals
+- [X] Navigation
+  - [X] Portals
   - [X] Precompile?
   - [X] Navmesh?
   - [X] Agent
   - [X] A*
   - [X] Room-based cache
-  - [ ] Door locking
+  - [ ] Door locking - do that later
 - [ ] Island
   - [X] Block out
   - [ ] Town
